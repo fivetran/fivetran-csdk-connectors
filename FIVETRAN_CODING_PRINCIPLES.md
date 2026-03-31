@@ -73,8 +73,8 @@ To adhere to Fivetran engineering standards, follow this process:
 
 ### 4.1 Template connector
 
-A reference implementation is available here:  
-[Fivetran Connector SDK Template Example](https://github.com/fivetran/fivetran_connector_sdk/tree/main/template_connector)
+A reference implementation is available here:
+[Fivetran Connector SDK Template Example](https://github.com/fivetran/fivetran-csdk-connectors/tree/main/template_connector)
 
 This includes:
 - A `connector.py` template.
