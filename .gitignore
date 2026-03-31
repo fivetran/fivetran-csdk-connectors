@@ -1,0 +1,25 @@
+# IDE
+**/.idea
+
+# Python
+**/__pycache__
+dist/
+build/
+*.egg-info/
+
+# Virtual Environment
+.venv*
+
+# OS
+.DS_Store
+
+# Generated files
+**/*_pb2.py
+**/*_pb2.pyi
+**/*_pb2_grpc.py
+*.spec
+**/__run.py
+**/Dockerfile
+
+# Connector specific
+**/files/
