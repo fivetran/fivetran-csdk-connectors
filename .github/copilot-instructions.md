@@ -20,13 +20,9 @@ This file provides high-level guidance for reviewing connector Pull Requests. Fo
 ## Repository context
 
 ### Structure
-- `template_connector/` - Canonical template: connector.py, configuration.json, requirements.txt, README_template.md
-- `connectors/` - Production-ready examples for specific data sources (databases, APIs, message queues)
-- `examples/quickstart_examples/` - Simple learning examples (hello world, configuration patterns)
-- `examples/common_patterns_for_connectors/` - Reusable patterns (authentication, pagination, cursors, error handling)
-- `examples/source_examples/` - Additional source-specific examples
-- `fivetran_platform_features/schema_change/` - Schema evolution handling
+- `_template_connector/` - Canonical template: connector.py, configuration.json, requirements.txt, README_template.md
 - `.github/instructions/` - Detailed review instructions for Python, JSON, and Markdown files
+- `<connector_name>/` (top-level folders) - Examples for Fivetran Connector SDK
 
 ### Critical SDK v2+ breaking changes
 As of SDK v2.0.0 (August 2025), yield is NO LONGER USED:
