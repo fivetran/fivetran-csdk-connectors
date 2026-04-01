@@ -78,7 +78,7 @@ A reference implementation is available here:
 
 This includes:
 - A `connector.py` template.
-- A `README.md` template illustrating recommended structure and conventions.
+- A `README_template.md` file illustrating recommended structure and conventions.
 
 This is a great place to start to learn our coding practices through templated examples.
 
