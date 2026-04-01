@@ -147,7 +147,7 @@ Every new connector example contribution must include proper documentation:
 
 #### README.md
 
-Each new connector example must include a `README.md` file in its directory. Refer to the [template connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main/template_connector) for structure and formatting.
+Each new connector example must include a `README.md` file in its directory. Refer to the [template connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main/_template_connector) for structure and formatting.
 
 #### Root README.md update
 
