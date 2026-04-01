@@ -173,7 +173,7 @@ These are ready-to-use connectors, requiring minimal modifications to get starte
 
 ## Documentation & Resources
 
-- **[template_connector](template_connector)** - Reference template for building new connectors
+- **[_template_connector](_template_connector)** - Reference template for building new connectors
 - **[CONTRIBUTING.md](CONTRIBUTING.md)** - Guide for contributing to this repository
 - **[PYTHON_CODING_STANDARDS.md](PYTHON_CODING_STANDARDS.md)** - Python coding standards and best practices
 - **[FIVETRAN_CODING_PRINCIPLES.md](FIVETRAN_CODING_PRINCIPLES.md)** - Code review principles and PR guidelines
