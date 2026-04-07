@@ -6,18 +6,27 @@ This connector fetches event data from Talon.one using the Management API. The c
 
 The connector maintains one table, `event`. This table contains application event data from Talon.one.
 
-
 ## Requirements
 
-- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-- Operating System:  
-- Windows 10 or later  
-- macOS 13 (Ventura) or later
-- Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows 10 or later
+  - macOS 13 (Ventura) or later
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
-Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template talon_one
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK init documentation](https://fivetran.com/docs/connectors/connector-sdk/technical-reference/init).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -34,24 +43,24 @@ The connector requires configuration with your Talon.one credentials and sync se
 
 ```json
 {
-    "base_url": "<YOUR_TALON.ONE_DOMAIN_URL>", 
+    "base_url": "<YOUR_TALON.ONE_DOMAIN_URL>",
     "api_key": "<YOUR_API_KEY>",
     "application_id": "<YOUR_TALON.ONE_APPLICATION_ID>"
 }
 ```
 
-> NOTE: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 The connector uses minimal external dependencies. The `requirements.txt` file should be empty because all required packages are pre-installed in the Fivetran environment.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: The `fivetran_connector_sdk:latest`, `requests:2.33.0`, `grpcio:1.78.0`, and `grpcio-tools:1.78.0` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
 This connector uses Talon.one Management API authentication:
-- API Key authentication using `ManagementKey-v1` format
+- API key authentication using `ManagementKey-v1` format
 - Requires a valid Talon.one Management API key
 - API key must be included in the Authorization header
 
@@ -76,11 +85,12 @@ The connector implements error handling for:
 
 All errors are logged using the Fivetran logging system for debugging and monitoring.
 
-## Tables Created
+## Tables created
 
 The connector creates one table:
 
 ### event
+
 Primary key: `id`
 
 Contains application event data including:
