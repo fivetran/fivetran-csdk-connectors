@@ -19,7 +19,7 @@ Refer to the [Connector SDK setup guide](https://fivetran.com/docs/connectors/co
 To initialize a new Connector SDK project using this connector as a starting point, run:
 
 ```
-fivetran init --template apache_hive
+fivetran init --template apache_hive/using_sqlalchemy
 ```
 
 `fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK init documentation](https://fivetran.com/docs/connectors/connector-sdk/technical-reference/init).
