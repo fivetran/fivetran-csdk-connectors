@@ -4,8 +4,9 @@
 # Example:
 # pandas==2.0.3
 #
-# Note: fivetran_connector_sdk and requests are pre-installed in the base environment
-# and should not be included in this file.
+# Note: The following packages are pre-installed in the base environment
+# and should not be included in this file:
+#   fivetran_connector_sdk:latest, requests:2.33.0, grpcio:1.78.0, grpcio-tools:1.78.0
 #
 # Best practices:
 # - Use explicit versions (==) for reproducibility

@@ -90,10 +90,18 @@ If a section is irrelevant (e.g., no error handling), the empty stub should be n
     - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
     - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
   ```   
-* **Getting started** → Must include link to Connector SDK Setup Guide. It is a fixed content, verbatim (no edits or omissions), as provided below:
+* **Getting started** → Must include link to Connector SDK Setup Guide and the `fivetran init` command. It is a fixed content, verbatim (no edits or omissions), as provided below:
   ```markdown
   ## Getting started
   Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+  To initialize a new Connector SDK project using this connector as a starting point, run:
+
+  ```
+  fivetran init --template <connector-name>
+  ```
+
+  `fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK init documentation](https://fivetran.com/docs/connectors/connector-sdk/technical-reference/init).
   ```
 * **Features** → Must list concrete features (not left blank or italicized template text).
 * **Configuration file** → Must include a JSON code block showing keys. Must mention that `configuration.json` should not be versioned, for example, as provided below:
@@ -124,7 +132,7 @@ If a section is irrelevant (e.g., no error handling), the empty stub should be n
   redshift_connector
   ```
 
-  Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+  Note: The `fivetran_connector_sdk:latest`, `requests:2.33.0`, `grpcio:1.78.0`, and `grpcio-tools:1.78.0` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
   ```
 * **Authentication** → Must specify auth method (API key, OAuth2, etc). For example, as provided below:
   ```markdown

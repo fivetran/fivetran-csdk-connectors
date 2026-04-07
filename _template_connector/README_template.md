@@ -14,7 +14,7 @@
 *Do not use Title Case in plain text that is used as unformatted subheading or item title, only capitalize the first word of subheading/item title (e.g., \- Rate limit errors – The connector automatically retries with exponential backoff, \- Data volume – Large accounts may require longer sync times, Incremental sync:).*
 *Do not use **bold** text anywhere except for UI elements controls like tabs, menus, buttons, fields, etc.*
 *Do not use nested bulleted lists for descriptions - write the description inline, for example, "- `mock\_api.py` – A simulated API for testing data retrieval."*
-*Use the following format for notes: "Note: note text"; omit the double quotes.*
+*Use the following format for notes: "> Note: note text"; omit the double quotes.*
 *Use numbered lists only where the order is important, for example, for a sequence of user actions. Every item in numbered lists should end with full stop.*
 *Complex sequences of user actions should use numbers for parent items and Roman notation for child items, with blank lines between the lines with Roman numerals.*
 *Use bulleted lists where the items are listed without any particular order or where alternatives are presented.*
@@ -50,6 +50,18 @@ This example was contributed by [Contributor Name/Organization](link-to-profile-
 ## Getting started
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template <connector-name>
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK init documentation](https://fivetran.com/docs/connectors/connector-sdk/technical-reference/init).
+
+*Include the following note only if the connector requires a `configuration.json` file to run.*
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 
 ## Features
 - *List key features of the connector, such as supported endpoints, data replication methods, and any special capabilities.*
@@ -66,8 +78,7 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 }
 ```
 
-Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main/connectors) or enhancing an [example](https://github.com/fivetran/fivetran-csdk-connectors/tree/main/examples) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values.
-When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 
 ## Requirements file
@@ -79,7 +90,7 @@ When adding the connector to your production repository, ensure that the `config
 pandas
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: The `fivetran_connector_sdk:latest`, `requests:2.33.0`, `grpcio:1.78.0`, and `grpcio-tools:1.78.0` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 
 ## Authentication
