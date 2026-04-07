@@ -1,20 +1,31 @@
 # Couchbase Magma Connector Example
-This connector example demonstrates how to sync data from a self-managed Couchbase Server (local, on-premises, or self-hosted in the cloud) using the Magma storage engine with the Connector SDK. 
+
+This connector example demonstrates how to sync data from a self-managed Couchbase Server (local, on-premises, or self-hosted in the cloud) using the Magma storage engine with the Connector SDK.
 It connects to a Couchbase instance, runs SQL++ (N1QL) queries to retrieve data from a specified Magma bucket, scope, and collection, and streams the results efficiently to a destination table—following best practices for handling large datasets.
 
->For syncing data from a Magma bucket on Couchbase Capella, please refer to the [Couchbase Capella connector example](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/examples/source_examples/couchbase_capella).
+> For syncing data from a Magma bucket on Couchbase Capella, please refer to the [Couchbase Capella connector example](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/examples/source_examples/couchbase_capella).
 
 ## Requirements
 
-* [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-* Operating system:
-  * Windows: 10 or later (64-bit only)
-  * macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
-  * Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
 Refer to the [Connector SDK setup guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template couchbase_magma
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK init documentation](https://fivetran.com/docs/connectors/connector-sdk/technical-reference/init).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -27,7 +38,7 @@ Refer to the [Connector SDK setup guide](https://fivetran.com/docs/connectors/co
 
 The connector requires the following configuration parameters to connect to your Couchbase instance:
 
-```
+```json
 {
     "username": "YOUR_COUCHBASE_USERNAME",
     "password": "YOUR_COUCHBASE_PASSWORD",
@@ -35,12 +46,12 @@ The connector requires the following configuration parameters to connect to your
     "bucket_name": "YOUR_COUCHBASE_BUCKET_NAME",
     "scope": "YOUR_COUCHBASE_SCOPE_NAME",
     "collection": "YOUR_COUCHBASE_COLLECTION_NAME",
-    "use_tls": "<true/false>",  # Optional, defaults to false, required if couchbase instance requires TLS
-    "cert_path": "PATH_TO_YOUR_TLS_CERTIFICATE"  # Optional, required if use_tls is true
+    "use_tls": "<true/false>",
+    "cert_path": "PATH_TO_YOUR_TLS_CERTIFICATE"
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -50,7 +61,7 @@ The connector requires the Couchbase Python SDK:
 couchbase==4.3.6
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: The `fivetran_connector_sdk:latest`, `requests:2.33.0`, `grpcio:1.78.0`, and `grpcio-tools:1.78.0` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -58,7 +69,7 @@ The connector authenticates with Couchbase using a username and password authent
 
 ## Data handling
 
-The connector handles data processing through the following steps:  
+The connector handles data processing through the following steps:
 - Establishes a connection to the Couchbase cluster using the provided credentials.
 - Executes a `SQL++` query against the specified collection.
 - Streams the query results to avoid loading the entire dataset into memory
@@ -67,7 +78,7 @@ The connector handles data processing through the following steps:
 
 ## Error handling
 
-The connector implements error handling in several critical functions:  
+The connector implements error handling in several critical functions:
 - In `create_couchbase_client`: Catches any exception during cluster connection and raises a meaningful error message.
 - In `execute_query_and_upsert`: Catches exceptions during query execution and data processing, raising descriptive runtime errors.
 
@@ -75,18 +86,18 @@ The connector implements error handling in several critical functions:
 
 The `schema()` function defines the structure of the destination table:
 
-```
+```json
 {
     "table": "airline_table",
     "primary_key": ["id"],
     "columns": {
         "id": "INT",
-        "created_at": "UTC_DATETIME",
-    },
+        "created_at": "UTC_DATETIME"
+    }
 }
 ```
-The table contains `airline` information from the Couchbase `travel-sample` bucket.
 
+The table contains `airline` information from the Couchbase `travel-sample` bucket.
 
 ## Additional considerations
 
