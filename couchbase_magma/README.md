@@ -47,7 +47,7 @@ The connector requires the following configuration parameters to connect to your
     "scope": "<YOUR_COUCHBASE_SCOPE_NAME>",
     "collection": "<YOUR_COUCHBASE_COLLECTION_NAME>",
     "use_tls": "<true/false>",
-    "cert_path": "PATH_TO_YOUR_TLS_CERTIFICATE"
+    "cert_path": "<YOUR_TLS_CERTIFICATE_PATH>"
 }
 ```
 
