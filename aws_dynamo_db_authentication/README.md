@@ -79,7 +79,7 @@ This connector authenticates by:
 ## Pagination
 
 Pagination is handled via:
-- `aws_dynamodb_parallel_scan.get_paginator(`
+- `aws_dynamodb_parallel_scan.get_paginator()`
 - Parallel scanning with `TotalSegments=4` and `Limit=10` per page.
 
 ## Data handling
