@@ -56,7 +56,7 @@ To initialize a new Connector SDK project using this connector as a starting poi
 fivetran init --template <connector-name>
 ```
 
-`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK init documentation](https://fivetran.com/docs/connectors/connector-sdk/technical-reference/init).
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
 
 *Include the following note only if the connector requires a `configuration.json` file to run.*
 
