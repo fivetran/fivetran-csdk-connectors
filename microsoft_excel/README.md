@@ -63,8 +63,8 @@ The connector requires the following Python packages:
 ```
 boto3==1.38.14
 pandas==2.2.3
-openpyxl
-python-calamine
+openpyxl==3.1.5
+python-calamine==0.6.2
 ```
 
 In order to use the `calamine` engine with `pandas` library, you need to include the `python-calamine` package and ensure that the `pandas` version is `equal to or above 2.2`.
