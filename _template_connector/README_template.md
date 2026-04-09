@@ -90,8 +90,7 @@ fivetran init --template <connector-name>
 pandas
 ```
 
-> Note: The `fivetran_connector_sdk:latest`, `requests:2.33.0`, `grpcio:1.78.0`, and `grpcio-tools:1.78.0` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
-
+> Note: Some packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`. Refer to the [pre-installed packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) documentation for the full list.
 
 ## Authentication
 *Explain the authentication mechanism used to access the source (e.g., API Key, OAuth2) and provide steps to obtain necessary credentials.*
