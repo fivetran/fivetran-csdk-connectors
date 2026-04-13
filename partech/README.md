@@ -18,6 +18,16 @@ The connector fetches location settings, program rules, redeemables (rewards), a
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template partech
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Syncs location configuration data including business details, reward modes, and display settings
@@ -48,7 +58,7 @@ Configuration parameters:
 | `location_key` | Your location-specific API key obtained from Partech. | Yes |
 | `business_key` | Your business-wide API key obtained from Partech. | Yes |
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Authentication
 
@@ -143,7 +153,7 @@ Contains loyalty program rules and settings with flattened multiple redemption c
 | `exclude_interoperability_strategy_between` | No |
 | `multiple_redemptions_enabled` | No |
 
-Note: The connector flattens columns prefixed with `multiple_redemptions_` from the nested `multiple_redemptions` object.
+> Note: The connector flattens columns prefixed with `multiple_redemptions_` from the nested `multiple_redemptions` object.
 
 ### REDEEMABLE
 

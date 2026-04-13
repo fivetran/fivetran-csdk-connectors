@@ -18,6 +18,16 @@ The connector creates a single `google_trends` table with detailed interest scor
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template google_trends
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Full refresh sync strategy – Fetches complete timeframes on every sync to track historical changes
@@ -49,11 +59,11 @@ Configuration parameters:
   - `timeframe` – Time period in Google Trends format (required)
     - Relative format: "today 12-m" (last 12 months), "today 3-m" (last 3 months)
     - Absolute format: "2024-01-01 2026-02-03" (specific date range)
-  Note: "today" keyword in absolute ranges is automatically converted to current date
+  > Note: "today" keyword in absolute ranges is automatically converted to current date
 
-You can also define the search array as a constant in `config.py`. The connector will use these defaults values if no `searches` key is provided in the `configuration,json`.
+You can also define the search array as a constant in `config.py`. The connector will use these default values if no `searches` key is provided in the `configuration.json`.
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -67,7 +77,7 @@ pytrends==4.9.2
 pandas==3.0.0
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 

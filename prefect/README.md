@@ -16,6 +16,16 @@ This connector syncs workflow orchestration data from Prefect Cloud to your data
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template prefect
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Incremental syncing based on updated timestamps for all tables
@@ -45,13 +55,13 @@ The connector requires the following configuration parameters:
 | `account_id` | string | Yes | Your Prefect Cloud account identifier. This can be found in your Prefect Cloud URL or account settings. |
 | `workspace_id` | string | Yes | Your Prefect Cloud workspace identifier. This specifies which workspace's data will be synced to your data warehouse. |
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 The connector does not require any additional Python packages beyond the Fivetran Connector SDK.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -59,7 +69,7 @@ This connector uses Bearer token authentication to access the Prefect Cloud API.
 
 To obtain your API credentials:
 
-1. Log in to your [Prefect Cloud] (https://app.prefect.cloud/) account.
+1. Log in to your [Prefect Cloud](https://app.prefect.cloud/) account.
 2. Navigate to your account settings and select **API Keys**.
 3. Generate a new API key with appropriate permissions.
 4. Make a note of the API key. You will need to add it to the `configuration.json` file.

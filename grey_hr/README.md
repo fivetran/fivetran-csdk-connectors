@@ -1,9 +1,11 @@
-# Connector SDK GreytHR API Connector Example
+# Grey HR Connector Example
 
 ## Connector overview
+
 This connector syncs Employee, Leave Transactions, and Attendance Insights data from the greytHR API to Fivetran destinations. greytHR is a cloud-based HR and payroll management platform that provides comprehensive employee data management capabilities. This connector implements incremental syncing with proper state management and handles the greytHR API's 31-day date range limitation for Leave and Attendance endpoints through intelligent date windowing.
 
 ## Requirements
+
 - [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
@@ -11,9 +13,21 @@ This connector syncs Employee, Leave Transactions, and Attendance Insights data 
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template grey_hr
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
+
 - OAuth2 client credentials authentication for secure API access
 - Automatic token refresh on expiration (401 errors) for uninterrupted syncing
 - Incremental syncing for Employee data based on lastModified timestamp
@@ -37,19 +51,21 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 }
 ```
 
-`api_username` - Your greytHR API username (client ID) obtained from greytHR API registration
-`api_password` - Your greytHR API password (client secret) obtained from greytHR API registration
-`greythr_domain` - Your organization's greytHR domain (e.g., moxemo6127dato.greythr.com)
-`sync_start_date` - The starting date for syncing leave transactions and attendance data in YYYY-MM-DD format (e.g., 2020-01-01). If not provided, defaults to 1900-01-01
+- `api_username` - Your greytHR API username (client ID) obtained from greytHR API registration
+- `api_password` - Your greytHR API password (client secret) obtained from greytHR API registration
+- `greythr_domain` - Your organization's greytHR domain (e.g., moxemo6127dato.greythr.com)
+- `sync_start_date` - The starting date for syncing leave transactions and attendance data in YYYY-MM-DD format (e.g., 2020-01-01). If not provided, defaults to 1900-01-01
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
+
 This connector does not require any additional Python packages beyond what is pre-installed in the Fivetran environment.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
+
 This connector uses OAuth2 client credentials flow for authentication. The authentication process is implemented in the `get_access_token()` function.
 
 To obtain your API credentials:
@@ -61,9 +77,11 @@ To obtain your API credentials:
 5. The connector automatically obtains and uses an access token for all API requests.
 
 ## Pagination
+
 The Employee endpoint uses offset-based pagination implemented in the `sync_employees()` function. The connector fetches employees page by page with a configurable page size (default: 100 records per page). The pagination continues until the `hasNext` field in the API response is `false`, indicating all pages have been retrieved.
 
 ## Data handling
+
 The connector processes data from three main greytHR API endpoints:
 
 - Employee data is synced incrementally using the `modifiedSince` parameter based on the `lastModified` timestamp stored in state (refer to `sync_employees()` function).
@@ -73,6 +91,7 @@ The connector processes data from three main greytHR API endpoints:
 Nested JSON objects are flattened using underscore notation (e.g., `employee.name` becomes `employee_name`). Arrays of objects are extracted into separate child tables with appropriate foreign key relationships to maintain data integrity.
 
 ## Error handling
+
 The connector implements comprehensive error handling with exponential backoff retry logic and automatic token refresh (refer to `get_access_token()` and `make_api_request()` functions):
 
 - HTTP 401 authentication errors automatically trigger token refresh and request retry
@@ -95,4 +114,5 @@ The connector implements comprehensive error handling with exponential backoff r
 | `attendance_status` | `employee`, `sync_start_date`, `sync_end_date`, `type` | Contains attendance status counts (Present, Absent, etc.). Child table linked to `attendance_insight`. |
 
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

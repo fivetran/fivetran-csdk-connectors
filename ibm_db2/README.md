@@ -6,15 +6,25 @@ This connector allows you to sync data from IBM Db2 to a destination using the F
 
 ## Requirements
 
-* [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-* Operating system:
-  * Windows: 10 or later (64-bit only)
-  * macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
-  * Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
 Refer to the [Connector SDK setup guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template ibm_db2
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -40,7 +50,7 @@ The example connector uses a `configuration.json` file to define the connection 
 ```
 
 The configuration parameters are:
-- `hostname`: The hostname of your IBM Db2 server 
+- `hostname`: The hostname of your IBM Db2 server
 - `port`: The port number for the Db2 connection
 - `database`: The name of your Db2 database
 - `user_id`: The username to authenticate with Db2
@@ -48,7 +58,7 @@ The configuration parameters are:
 - `schema_name`: The schema name in the Db2 database where the table resides
 - `table_name`: The name of the table to sync data from
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -58,7 +68,7 @@ The `requirements.txt` file specifies the Python libraries required by the conne
 ibm_db==3.2.6
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -66,7 +76,7 @@ The connector uses direct database authentication with a `username` and `passwor
 
 ## Data handling
 
-The connector performs the following data handling operations:  
+The connector performs the following data handling operations:
 - Establishes a connection to the IBM Db2 database using the provided credentials
 - Tracks the last synced timestamp to enable incremental updates
 - Queries tables with a timestamp filter to retrieve only changed records
@@ -74,7 +84,7 @@ The connector performs the following data handling operations:
 
 ## Error handling
 
-The connector implements the following error handling strategies:  
+The connector implements the following error handling strategies:
 - Connection failures: Catches database connection errors and provides informative messages
 - Configuration validation: Checks for required configuration parameters before attempting connections
 - State management: Checkpoints sync progress to enable resumable operations
@@ -82,7 +92,7 @@ The connector implements the following error handling strategies:
 
 ## Tables created
 
-The example connector creates and syncs the `EMPLOYEE` table, a sample  table containing data about employees with various fields demonstrating different data types.
+The example connector creates and syncs the `EMPLOYEE` table, a sample table containing data about employees with various fields demonstrating different data types.
 
 Schema definition from connector:
 

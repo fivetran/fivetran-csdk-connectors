@@ -16,6 +16,16 @@ This connector syncs metrics metadata and time series data from Prometheus, an o
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template prometheus
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Syncs metrics metadata including metric names, types, and help text
@@ -53,13 +63,13 @@ Configuration parameters:
 - `lookback_hours` (optional, defaults to 24) - Number of hours to look back for initial sync
 - `metrics_filter` (optional) - Comma-separated list or JSON array of specific metric names to sync. If omitted, all metrics are synced.
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector uses only standard library packages and requests, which are pre-installed in the Fivetran environment. No additional dependencies are required, so no `requirements.txt` file is needed.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -89,7 +99,7 @@ The connector processes data as follows:
 
 Metrics metadata sync - The connector first fetches all available metric names from Prometheus using the `/api/v1/label/__name__/values` endpoint. For each metric, a record is created with the metric name. 
 
-Note: Metric type and help text are set to default values (unknown and empty string) rather than being fetched from the `/api/v1/targets/metadata` endpoint, as this endpoint is not universally available across all Prometheus deployments (e.g., Grafana Cloud). This data is upserted into the metrics table. Refer to the `sync_metrics_metadata()` function in connector.py.
+> Note: Metric type and help text are set to default values (unknown and empty string) rather than being fetched from the `/api/v1/targets/metadata` endpoint, as this endpoint is not universally available across all Prometheus deployments (e.g., Grafana Cloud). This data is upserted into the metrics table. Refer to the `sync_metrics_metadata()` function in connector.py.
 
 Time-series data sync:
 

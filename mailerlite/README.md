@@ -11,7 +11,18 @@ This connector demonstrates how to fetch email marketing data from [MailerLite](
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template mailerlite
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 - Synchronizes subscribers with custom fields and metadata
@@ -34,12 +45,12 @@ The configuration keys required for your connector are as follows:
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 The connector uses the `requests` library for HTTP communication, which is pre-installed in the Fivetran environment.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 The connector uses MailerLite API keys for authentication. To obtain your API key:
@@ -69,7 +80,7 @@ The connector implements client-side incremental sync for subscribers and campai
 - Timestamp conversion: ISO 8601 timestamps from the API are converted to milliseconds since epoch for comparison (refer to the `iso_to_timestamp()` function)
 - Generic implementation: The `sync_paginated_data()` function accepts an `enable_incremental` parameter to enable incremental sync for any entity
 
-Note: MailerLite API does not support server-side timestamp filtering, so the connector must fetch all records and perform client-side filtering. This ensures data completeness while minimizing database operations.
+> Note: MailerLite API does not support server-side timestamp filtering, so the connector must fetch all records and perform client-side filtering. This ensures data completeness while minimizing database operations.
 
 ## Data handling
 The connector processes data from multiple MailerLite API endpoints and flattens nested JSON structures for optimal table schemas. The `flatten_dict()` function recursively processes nested objects by concatenating keys with underscores, while arrays are converted to JSON strings for storage. Single nested JSON objects are flattened into the same table, while arrays of objects are stored as JSON strings. All data is upserted using the primary key defined in the schema, ensuring idempotent operations.

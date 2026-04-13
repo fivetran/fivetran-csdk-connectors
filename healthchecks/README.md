@@ -6,7 +6,7 @@ This connector syncs health check monitoring data from Healthchecks.io to your d
 
 The connector retrieves data from four primary endpoints: health checks (monitors), pings (check-in events), flips (status changes), and integrations (notification channels). This allows you to build comprehensive dashboards for operational monitoring, SLA tracking, and incident analysis.
 
-**Important**: This connector performs a full refresh on each sync because the Healthchecks.io API does not support timestamp-based filtering or pagination. State checkpointing is maintained for sync tracking purposes, but all data is fetched on every sync cycle.
+> Note: This connector performs a full refresh on each sync because the Healthchecks.io API does not support timestamp-based filtering or pagination. State checkpointing is maintained for sync tracking purposes, but all data is fetched on every sync cycle.
 
 ## Requirements
 
@@ -19,6 +19,16 @@ The connector retrieves data from four primary endpoints: health checks (monitor
 ## Getting started
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template healthchecks
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -40,13 +50,13 @@ The connector requires the following configuration parameter:
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector uses only the standard libraries and packages pre-installed in the Fivetran environment. No additional dependencies are required.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -55,11 +65,11 @@ This connector uses API key authentication to access the Healthchecks.io Managem
 To obtain your API key:
 
 1. Log in to your Healthchecks.io account.
-2. Navigate to **Settings > API Access**.
+2. Navigate to **Settings** > **API Access**.
 3. Copy your project-specific API key.
 4. Add the API key to your `configuration.json` file.
 
-**Note**: Healthchecks.io provides both read-write and read-only API keys. This connector requires a read-only key at a minimum, though a read-write key will also work.
+> Note: Healthchecks.io provides both read-write and read-only API keys. This connector requires a read-only key at a minimum, though a read-write key will also work.
 
 ## API limitations
 

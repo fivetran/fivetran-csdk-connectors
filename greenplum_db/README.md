@@ -6,15 +6,25 @@ This connector example demonstrates how to fetch data from a Greenplum database 
 
 ## Requirements
 
-* [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-* Operating system:
-  * Windows: 10 or later (64-bit only)
-  * macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
-  * Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
 Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template greenplum_db
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -28,7 +38,7 @@ Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/se
 
 The connector requires the following configuration parameters to connect to your Greenplum database:
 
-```
+```json
 {
   "HOST": "<YOUR_GREENPLUM_DATABASE_HOST>",
   "PORT": "<YOUR_GREENPLUM_DATABASE_PORT>",
@@ -38,7 +48,7 @@ The connector requires the following configuration parameters to connect to your
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -48,7 +58,7 @@ The connector requires the following Python libraries:
 psycopg2-binary
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -56,7 +66,7 @@ The connector authenticates with the Greenplum database using username and passw
 
 ## Data handling
 
-The connector performs the following data handling operations:  
+The connector performs the following data handling operations:
 - Executes SQL queries to fetch data from Greenplum (refer to `GreenplumClient.upsert_data()`)
 - Uses server-side cursors to stream large results without loading everything into memory
 - Converts datetime objects to ISO format for proper serialization (refer to `GreenplumClient.convert_datetime_to_iso()`)
@@ -64,12 +74,13 @@ The connector performs the following data handling operations:
 
 ## Error handling
 
-The connector includes error handling for database connection issues. In the `GreenplumClient.connect()` method, connection errors are caught and raised. 
+The connector includes error handling for database connection issues. In the `GreenplumClient.connect()` method, connection errors are caught and raised.
 
 The connector also performs validation of required configuration parameters in the `schema()` function to ensure all necessary credentials are provided before attempting to connect to the database.
 
 ## Tables created
-The connector creates a single table,  `SAMPLE_TABLE`, in the destination:
+
+The connector creates a single table, `SAMPLE_TABLE`, in the destination:
 
 ```json
 {

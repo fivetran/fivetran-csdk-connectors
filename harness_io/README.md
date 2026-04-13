@@ -2,11 +2,13 @@
 
 
 ## Connector overview
+
 This connector extracts data from `Harness.io` API and loads it into a destination using Fivetran's Connector SDK. It fetches information about user projects, connector catalog, budgets, and performance metrics like mean time to resolution, making it useful for organizations that want to analyze their Harness.io data alongside other business data.
 
 
 ## Requirements
-- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
+
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
@@ -14,10 +16,22 @@ This connector extracts data from `Harness.io` API and loads it into a destinati
 
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template harness_io
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 
 ## Features
+
 - Retrieval of user projects with detailed information
 - Access to the connectors catalog
 - Budget information extraction
@@ -27,25 +41,28 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 
 
 ## Configuration file
+
 The connector requires the following configuration parameters:
 
-```
+```json
 {
   "api_token": "<YOUR_HARNESS_API_TOKEN>",
   "account_id": "<YOUR_HARNESS_ACCOUNT_ID>"
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 
 ## Requirements file
+
 This connector example uses the standard libraries provided by Python and does not require any additional packages.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 
 ## Authentication
+
 Authentication with the Harness.io API is performed using an API token and account ID. These credentials are passed in the request headers and query parameters respectively.
 
 1. Obtain your API token from your Harness.io account settings.
@@ -54,6 +71,7 @@ Authentication with the Harness.io API is performed using an API token and accou
 
 
 ## Pagination
+
 Refer to the `upsert_all_projects_for_user function()` method for pagination implementation. The connector handles pagination for the projects endpoint by doing the following:
 
 - Setting an initial page size (100 records)
@@ -63,6 +81,7 @@ Refer to the `upsert_all_projects_for_user function()` method for pagination imp
 
 
 ## Data handling
+
 The connector defines a schema for four destination tables and processes data used for each table in the following way:
 
 - User projects: Data is fetched from the `/ng/api/projects` endpoint. The connector processes each project record, flattening nested structures before upserting to the destination table.
@@ -75,10 +94,12 @@ The connector defines a schema for four destination tables and processes data us
 
 
 ## Error handling
+
 Refer to the `validate_configuration()` function. The connector validates that all required configuration parameters are present before attempting to connect to the API. If any required parameters are missing, the connector raises a `ValueError` with a descriptive message.
 
 
 ## Tables created
+
 The connector creates the following tables:
 
 - `USER_PROJECTS`: Information about projects the user has access to.
@@ -97,7 +118,7 @@ The schema for this table is as follows:
     ```
 
 - `CONNECTORS`: Information about available connectors. The schema for this table is as follows:
-  
+
     ```json
     {
       "table": "connectors",
@@ -121,9 +142,9 @@ The schema for this table is as follows:
       }
     }
     ```
-  
+
 - `MEAN_TIME_TO_RESOLUTION`: Performance metrics related to mean time to resolution. The schema for this table is as follows:
-  
+
     ```json
     {
       "table": "mean_time_to_resolution",
@@ -135,8 +156,10 @@ The schema for this table is as follows:
 
 
 ## Additional files
-- `harness_api.py` – Contains the `HarnessAPI` class that handles communication with the Harness.io API. It provides methods for making `GET` and `POST` requests, building URLs with query parameters, and managing authentication headers.
+
+- **`harness_api.py`** – Contains the `HarnessAPI` class that handles communication with the Harness.io API. It provides methods for making `GET` and `POST` requests, building URLs with query parameters, and managing authentication headers.
 
 
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

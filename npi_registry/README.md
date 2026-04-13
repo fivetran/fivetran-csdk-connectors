@@ -16,6 +16,16 @@ This connector fetches healthcare provider data from the National Plan and Provi
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template npi_registry
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Fetches provider data from the NPPES NPI Registry public API
@@ -41,7 +51,7 @@ The `configuration.json` file requires a single parameter: the complete API URL 
 
 - `api_url` (required): Complete API URL generated from the NPPES API demo page. The URL should include your search criteria and the `limit` parameter. The API supports a maximum limit of 200 results per request.
 
-Note: Ensure that the `configuration.json` file is not checked into version control if it contains any sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ### How to generate your API URL
 
@@ -54,13 +64,13 @@ To generate your API URL:
 5. Copy the complete URL from the demo interface.
 6. Paste it into the `configuration.json` file as the value for `api_url`.
 
-Note: The connector automatically handles pagination by modifying the `skip` parameter. You do not need to modify the skip value in your configuration URL.
+> Note: The connector automatically handles pagination by modifying the `skip` parameter. You do not need to modify the skip value in your configuration URL.
 
 ## Requirements file
 
 This connector does not require any additional Python packages beyond those pre-installed in the Fivetran environment. Therefore, no `requirements.txt` file is needed.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
