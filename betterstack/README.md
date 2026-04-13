@@ -16,6 +16,16 @@ This connector syncs uptime monitoring data from Better Stack's Uptime API. It r
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template betterstack
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Incremental syncing based on `updated_at` timestamps for all endpoints
@@ -35,13 +45,13 @@ The connector requires the following configuration parameter:
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector uses only the standard library and SDK-provided packages. No additional dependencies are required in `requirements.txt`.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -91,7 +101,7 @@ The connector implements comprehensive error handling (refer to the `make_api_re
 
 The connector creates the following tables (refer to the `schema()` function):
 
-| Table Name | Primary Key | Description |
+| Table name | Primary key | Description |
 |------------|-------------|-------------|
 | `MONITORS` | `id` | Website/API uptime monitors with configuration including URL, monitor type, check frequency, regions, and status |
 | `STATUS_PAGES` | `id` | Public-facing status pages with company info, subdomain, custom domain, theme, and display settings |

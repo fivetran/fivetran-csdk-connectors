@@ -2,24 +2,32 @@
 
 ## Connector overview
 
+This connector example demonstrates how to sync data from Couchbase Capella using the Connector SDK. It connects to a Couchbase Capella instance, executes SQL++ (N1QL) queries to fetch data from a specific bucket, scope, and collection, and efficiently streams the data to destination table while implementing best practices for handling large datasets.
+This connector is built for Couchbase Capella. It supports buckets using either the Magma or Couchstore storage engines.
 
-This connector example demonstrates how to sync data from Couchbase Capella using the Connector SDK. It connects to a Couchbase Capella instance, executes SQL++ (N1QL) queries to fetch data from a specific bucket, scope, and collection, and efficiently streams the data to destination table while implementing best practices for handling large datasets.  
-This connector is built for Couchbase Capella. It supports buckets using either the Magma or Couchstore storage engines.  
-
-> For syncing data from a Magma bucket on self-managed Couchbase Server, please refer to the [Couchbase Magma connector example](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/examples/source_examples/couchbase_magma)
-
+> For syncing data from a Magma bucket on self-managed Couchbase Server, please refer to the [Couchbase Magma connector example](https://github.com/fivetran/fivetran-csdk-connectors/tree/main/couchbase_magma)
 
 ## Requirements
 
-* [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-* Operating system:
-  * Windows: 10 or later (64-bit only)
-  * macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
-  * Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
-Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template couchbase_capella
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -33,18 +41,18 @@ Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/se
 
 The connector requires the following configuration parameters to connect to your Couchbase Capella instance:
 
-```
+```json
 {
-    "username": "YOUR_COUCHBASE_USERNAME",
-    "password": "YOUR_COUCHBASE_PASSWORD",
-    "endpoint": "YOUR_COUCHBASE_ENDPOINT",
-    "bucket_name": "YOUR_COUCHBASE_BUCKET_NAME",
-    "scope": "YOUR_COUCHBASE_SCOPE_NAME",
-    "collection": "YOUR_COUCHBASE_COLLECTION_NAME"
+    "username": "<YOUR_COUCHBASE_USERNAME>",
+    "password": "<YOUR_COUCHBASE_PASSWORD>",
+    "endpoint": "<YOUR_COUCHBASE_ENDPOINT>",
+    "bucket_name": "<YOUR_COUCHBASE_BUCKET_NAME>",
+    "scope": "<YOUR_COUCHBASE_SCOPE_NAME>",
+    "collection": "<YOUR_COUCHBASE_COLLECTION_NAME>"
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -54,7 +62,7 @@ The connector requires the Couchbase Python SDK:
 couchbase==4.3.6
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -62,7 +70,7 @@ The connector authenticates with Couchbase using a username and password authent
 
 ## Data handling
 
-The connector handles data processing through the following steps:  
+The connector handles data processing through the following steps:
 - Establishes a connection to the Couchbase cluster using the provided credentials.
 - Executes a `SQL++` query against the specified collection.
 - Streams the query results to avoid loading the entire dataset into memory
@@ -71,25 +79,25 @@ The connector handles data processing through the following steps:
 
 ## Error handling
 
-The connector implements error handling in several critical functions:  
+The connector implements error handling in several critical functions:
 - In `create_couchbase_client`: Catches any exception during cluster connection and raises a meaningful error message
 - In `execute_query_and_upsert`: Catches exceptions during query execution and data processing, raising descriptive runtime errors
 
-## Tables Created
+## Tables created
 
 The `schema()` function defines the structure of the destination table:
 
-```
+```json
 {
     "table": "airline_table",
     "primary_key": ["id"],
     "columns": {
-        "id": "INT",
-    },
+        "id": "INT"
+    }
 }
 ```
-The table contains `airline` information from the Couchbase `travel-sample` bucket.
 
+The table contains `airline` information from the Couchbase `travel-sample` bucket.
 
 ## Additional considerations
 

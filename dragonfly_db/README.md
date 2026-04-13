@@ -18,10 +18,20 @@ The connector is particularly valuable for organizations using DragonflyDB as a 
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template dragonfly_db
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Only syncs new or modified keys using deterministic MD5 hashing
-- Aautomatically detects and removes keys deleted from DragonflyDB
+- Automatically detects and removes keys deleted from DragonflyDB
 - Automatic detection and timestamp-based incremental sync for RedisTimeSeries keys
 - Synchronizes all Redis-compatible data types: strings, hashes, lists, sets, and sorted sets
 - High-performance data extraction leveraging DragonflyDB's multi-threaded architecture
@@ -70,7 +80,7 @@ Key pattern examples:
 - `user:*:profile` - All user profile keys
 - `rate_limit:*` - All rate limiter keys
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -80,7 +90,7 @@ The connector uses the `redis` library for connecting to DragonflyDB (Redis-comp
 redis
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 

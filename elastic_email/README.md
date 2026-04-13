@@ -16,6 +16,16 @@ This connector syncs email marketing data from Elastic Email to your destination
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template elastic_email
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Full sync of campaigns, contacts, lists, segments, and templates
@@ -32,19 +42,19 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 
 The connector requires the following configuration parameters:
 
-```
+```json
 {
   "api_key": "<YOUR_ELASTIC_EMAIL_API_KEY>"
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector uses only the standard libraries provided by the Fivetran Connector SDK runtime. No additional packages are required.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -92,7 +102,7 @@ Refer to the `make_request_with_retry` function in [connector.py](connector.py).
 
 The connector creates the following tables in the destination:
 
-| Table Name | Primary Key | Description |
+| Table name | Primary key | Description |
 |------------|-------------|-------------|
 | `CAMPAIGN` | `name` | Email marketing campaigns. |
 | `CONTACT` | `email` | Contact list with email addresses and metadata. |

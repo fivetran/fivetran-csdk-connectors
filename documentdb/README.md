@@ -2,17 +2,17 @@
 
 ## Connector overview
 
-This connector integrates AWS DocumentDB with Fivetran, syncing data from DocumentDB collections to your destination. It connects to a DocumentDB cluster, efficiently retrieves data using pagination, and handles incremental updates based on the `updated_at` timestamp field. 
+This connector integrates AWS DocumentDB with Fivetran, syncing data from DocumentDB collections to your destination. It connects to a DocumentDB cluster, efficiently retrieves data using pagination, and handles incremental updates based on the `updated_at` timestamp field.
 
-Note: Fivetran already provides a native Java-based DocumentDB connector that supports SaaS deployment models. This Python-based connector is specifically intended for Hybrid Deployment (HD) scenarios, as the native connector does not support Hybrid Deployment. For SaaS deployments, we recommend using the native DocumentDB connector available at https://fivetran.com/docs/connectors/databases/documentdb.
+> Note: Fivetran already provides a native Java-based DocumentDB connector that supports SaaS deployment models. This Python-based connector is specifically intended for Hybrid Deployment (HD) scenarios, as the native connector does not support Hybrid Deployment. For SaaS deployments, we recommend using the native DocumentDB connector available at https://fivetran.com/docs/connectors/databases/documentdb.
 
-Important Network Consideration: DocumentDB clusters are typically deployed in private subnets and do not allow direct connections from outside the VPC. If you need to connect from outside the VPC (such as from your local development environment), you can set up an EC2 instance in the same VPC as your DocumentDB cluster using the [AWS automatic connectivity guide](https://docs.aws.amazon.com/documentdb/latest/developerguide/connect-ec2-auto.html#auto-connect-ec2.process). Once the EC2 instance is set up, you can create a TCP tunnel using socat: `socat TCP-LISTEN:27017,fork TCP:<documentDBHost>:27017` to forward traffic from your local machine to the DocumentDB cluster through the EC2 instance.
+> Note: DocumentDB clusters are typically deployed in private subnets and do not allow direct connections from outside the VPC. If you need to connect from outside the VPC (such as from your local development environment), you can set up an EC2 instance in the same VPC as your DocumentDB cluster using the [AWS automatic connectivity guide](https://docs.aws.amazon.com/documentdb/latest/developerguide/connect-ec2-auto.html#auto-connect-ec2.process). Once the EC2 instance is set up, you can create a TCP tunnel using socat: `socat TCP-LISTEN:27017,fork TCP:<documentDBHost>:27017` to forward traffic from your local machine to the DocumentDB cluster through the EC2 instance.
 
 The connector is designed to handle large datasets efficiently through streaming and pagination techniques, making it suitable for production environments with significant data volumes. It supports MongoDB-compatible operations since DocumentDB is MongoDB-compatible.
 
 ## Requirements
 
-- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
@@ -20,7 +20,17 @@ The connector is designed to handle large datasets efficiently through streaming
 
 ## Getting started
 
-Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template documentdb
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -36,7 +46,7 @@ Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/se
 
 The connector requires the following configuration parameters:
 
-```
+```json
 {
   "hostname": "<YOUR_DOCUMENTDB_HOSTNAME>",
   "username": "<YOUR_DOCUMENTDB_USERNAME>",
@@ -52,7 +62,7 @@ The connector requires the following configuration parameters:
 - database: The DocumentDB database name to connect to
 - port: The port number for the DocumentDB cluster (default: 27017)
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -63,11 +73,11 @@ pymongo
 python-dateutil
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
-The connector uses SSL authentication with DocumentDB. Provide the following credentials in the configuration: 
+The connector uses SSL authentication with DocumentDB. Provide the following credentials in the configuration:
 
 - username: A valid DocumentDB user with read permissions on the specified database
 - password: The corresponding password for the user
@@ -76,7 +86,7 @@ The connector automatically configures SSL settings required for DocumentDB conn
 
 ## Pagination
 
-The connector implements efficient pagination when retrieving data from DocumentDB:  
+The connector implements efficient pagination when retrieving data from DocumentDB:
 - Uses MongoDB cursor-based pagination with batch_size parameter
 - Default batch size is set to 100 documents but can be adjusted
 - Performs upserts one document at a time, avoiding excessive memory usage
@@ -84,7 +94,7 @@ The connector implements efficient pagination when retrieving data from Document
 
 ## Data handling
 
-The connector processes data with the following approach:  
+The connector processes data with the following approach:
 - Connects to the specified DocumentDB database
 - Retrieves documents incrementally based on the `updated_at` timestamp
 - Transforms DocumentDB documents into dictionaries for Fivetran
@@ -102,7 +112,7 @@ The connector processes data with the following approach:
 
 ## Error handling
 
-The connector implements the following error handling strategies:  
+The connector implements the following error handling strategies:
 - Validates configuration parameters before attempting connection
 - Provides detailed error messages for connection failures
 - Handles timezone-related errors by ensuring consistent timezone awareness
@@ -116,21 +126,22 @@ The connector implements the following error handling strategies:
 This connector creates the following tables in your destination:
 
 ### USERS
-- Primary Key: `_id`
-- Columns: 
+
+- Primary key: `_id`
+- Columns:
   - `_id` (STRING): Document unique identifier
   - `created_at` (UTC_DATETIME): Document creation timestamp
   - `updated_at` (UTC_DATETIME): Document last update timestamp
   - `metadata` (JSON): Additional user metadata as JSON object
 
 ### ORDERS
-- Primary Key: `_id`
+
+- Primary key: `_id`
 - Columns:
   - `_id` (STRING): Document unique identifier
   - `created_at` (UTC_DATETIME): Order creation timestamp
   - `updated_at` (UTC_DATETIME): Order last update timestamp
   - `items` (JSON): Order items as JSON array
-
 
 ## Prerequisites
 
@@ -156,7 +167,7 @@ Example document structure:
 
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.
 
-## DocumentDB-specific notes
+### DocumentDB-specific notes
 
 - DocumentDB is MongoDB-compatible, so this connector uses the PyMongo driver
 - SSL is required for DocumentDB connections and is automatically configured

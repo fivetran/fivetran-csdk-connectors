@@ -6,15 +6,25 @@ This connector shows how to sync data from Apache HBase databases using Fivetran
 
 ## Requirements
 
-* [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-* Operating system:
-  * Windows: 10 or later (64-bit only)
-  * macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
-  * Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
-Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template apache_hbase
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -26,18 +36,18 @@ Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/se
 
 ## Configuration file
 
-The connector requires the following configuration parameters: 
+The connector requires the following configuration parameters:
 
-```
+```json
 {
   "hostname": "<YOUR_HBASE_HOSTNAME>",
   "port": "<YOUR_HBASE_PORT>",
-  "table_name": "<YOUR_HBASE_TABLE_NAME>", 
+  "table_name": "<YOUR_HBASE_TABLE_NAME>",
   "column_family": "<YOUR_HBASE_COLUMN_FAMILY>"
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -47,7 +57,7 @@ This connector requires the happybase library to communicate with Apache HBase:
 happybase==1.2.0
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -61,8 +71,7 @@ Refer to the `execute_query_and_upsert` function, which implements batched data 
 
 ## Data handling
 
-
-The connector processes data from HBase in the following way:  
+The connector processes data from HBase in the following way:
 - Creates a connection to the HBase server using the `happybase` library.
 - Scans the specified table with a filter based on the `created_at` timestamp.
 - Decodes and transforms each row into a structured format
@@ -71,26 +80,25 @@ The connector processes data from HBase in the following way:
 
 ## Error handling
 
-The connector implements error handling at multiple levels:  
+The connector implements error handling at multiple levels:
 - Connection errors: Captured in the `create_hbase_connection` function, raising a descriptive RuntimeError
 - Data processing errors: The `execute_query_and_upsert` function uses try-except blocks to handle missing columns in row data, logging warnings and continuing execution without failing the entire sync
 
-## Tables Created
+## Tables created
 
-
-The connector creates one table:  
+The connector creates one table:
 - profile_table
 
 The schema of the created table is as follows:
 
-```
+```json
 {
     "table": "profile_table",
     "primary_key": ["id"],
     "columns": {
         "id": "STRING",
-        "created_at": "UTC_DATETIME",
-    },
+        "created_at": "UTC_DATETIME"
+    }
 }
 ```
 

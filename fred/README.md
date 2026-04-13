@@ -16,6 +16,16 @@ This connector syncs economic data from the Federal Reserve Economic Data (FRED)
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template fred
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Syncs series metadata including title, frequency, units, and seasonal adjustment information
@@ -28,7 +38,6 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 - Configurable checkpoint intervals for efficient state management
 
 ## Configuration file
-
 
 ```json
 {
@@ -44,13 +53,13 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 - `series_ids`: Comma-separated list of series IDs to sync (e.g., "GNPCA,UNRATE,CPIAUCSL")
 - `sync_start_date`: Optional start date for syncing observations in YYYY-MM-DD format (defaults to 2020-01-01)
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector does not require a `requirements.txt` file as it only uses standard library modules and the `requests` library, which is pre-installed in the Fivetran environment.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -96,7 +105,7 @@ The connector implements comprehensive error handling:
 
 ## Tables created
 
-| Table Name            | Primary Key         | Description                                                                                                                                                             |
+| Table name            | Primary key         | Description                                                                                                                                                             |
 |-----------------------|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `series`              | `id`                | Contains metadata about economic data series including title, frequency, units, seasonal adjustment information, observation dates, popularity, and notes.              |
 | `series_observations` | `series_id`, `date` | Contains time series data points for each series with values, series identifier, observation date, and realtime start/end dates indicating when the data was available. |

@@ -6,15 +6,25 @@ This connector shows how to fetch data from Apache Hive using the `PyHive` and `
 
 ## Requirements
 
-* [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-* Operating system:
-  * Windows: 10 or later (64-bit only)
-  * macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
-  * Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
 Refer to the [Connector SDK setup guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template apache_hive/using_pyhive
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -26,7 +36,7 @@ Refer to the [Connector SDK setup guide](https://fivetran.com/docs/connectors/co
 
 This connector requires the following configuration parameters to establish a connection to your Hive instance:
 
-```
+```json
 {
   "hostname": "YOUR_HIVE_HOSTNAME",
   "port": "<YOUR_HIVE_PORT>",
@@ -36,7 +46,7 @@ This connector requires the following configuration parameters to establish a co
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -48,11 +58,11 @@ thrift_sasl
 sasl
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
-The connector supports `CUSTOM` authentication for Apache Hive. You need to provide:  
+The connector supports `CUSTOM` authentication for Apache Hive. You need to provide:
 - `hostname`: The address of your Hive server
 - `port`: The port number Hive is listening on (typically 10000)
 - `username`: Your Hive username
@@ -62,25 +72,25 @@ Authentication is handled in the `create_hive_connection` function.
 
 ## Data handling
 
-The connector performs the following data handling operations:  
+The connector performs the following data handling operations:
 - Fetching: Data is retrieved from Apache Hive using SQL queries with timestamp-based filtering.
 - Processing: The `process_row` function converts raw Hive data into dictionary format suitable for Fivetran.
   - Column names are extracted and mapped to their values.
-- Batching: Data is processed in configurable batches (1000 rows by default) to prevent memory overflow. 
+- Batching: Data is processed in configurable batches (1000 rows by default) to prevent memory overflow.
 - State management: The connector tracks the latest created timestamp to enable incremental syncs.
 
 ## Tables created
 
 The connector creates a table named `PEOPLE` with the following schema:
 
-```
+```json
 {
     "table": "people",
     "primary_key": ["id"],
     "columns": {
         "id": "INT",
         "created_at": "UTC_DATETIME"
-    },
+    }
 }
 ```
 

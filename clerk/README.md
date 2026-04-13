@@ -1,11 +1,13 @@
 # Clerk API Connector
 
 ## Connector overview
+
 This connector integrates with the Clerk API to synchronize user data into your destination. It fetches user records from Clerk and flattens nested data structures into normalized tables, making it easy to analyze user data in your data warehouse. The connector supports incremental sync using timestamp-based cursors and handles pagination automatically to process large datasets efficiently.
 
-Clerk is a user authentication and management platform that provides APIs for managing users, their email addresses, phone numbers, social accounts, and authentication methods. 
+Clerk is a user authentication and management platform that provides APIs for managing users, their email addresses, phone numbers, social accounts, and authentication methods.
 
 ## Requirements
+
 - [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
@@ -13,9 +15,21 @@ Clerk is a user authentication and management platform that provides APIs for ma
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template clerk
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
+
 - Fetches user data from the Clerk API `/v1/users` endpoint
 - Incremental sync support using `created_at_after` parameter to fetch only newly created users (defaults to January 1, 1990 for the initial sync)
 - Automatic pagination using offset-based pagination (limit and offset parameters)
@@ -26,6 +40,7 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 - Memory-efficient processing using generator functions to avoid loading all the data at once
 
 ## Configuration file
+
 The configuration file contains the API key required to authenticate with the Clerk API.
 
 ```json
@@ -37,14 +52,16 @@ The configuration file contains the API key required to authenticate with the Cl
 Configuration parameters:
 - `api_key` (required): Your Clerk API secret key.
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
+
 This connector example uses standard libraries provided by Python and does not require any additional packages.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
+
 This connector uses API key authentication with bearer tokens. The API key is passed in the `Authorization` header as `Bearer <api_key>`.
 
 To obtain your Clerk API key:
@@ -84,6 +101,7 @@ Data type inference:
 - Fivetran automatically infers data types for all other columns based on the data
 
 ## Error handling
+
 The connector implements comprehensive error handling with retry logic.
 
 Retry strategy:
@@ -101,9 +119,10 @@ Error categories:
 Timeout: All API requests have a 30-second timeout to prevent hanging connections.
 
 ## Tables created
+
 The connector creates 8 tables in your destination:
 
-| Table Name | Type | Primary Key | Foreign Key | Description |
+| Table name | Type | Primary key | Foreign key | Description |
 |------------|------|-------------|-------------|-------------|
 | `USER` | Main table | `id` | - | Contains flattened user profile data including metadata fields. Nested objects like `public_metadata`, `private_metadata`, `unsafe_metadata` are flattened into columns. |
 | `USER_EMAIL_ADDRESS` | Child table | `id` | `user_id` → `USER.id` | Contains email addresses with verification details. |
@@ -115,4 +134,5 @@ The connector creates 8 tables in your destination:
 | `USER_ENTERPRISE_ACCOUNT` | Child table | `id` | `user_id` → `USER.id` | Contains enterprise account connections and SSO details. |
 
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

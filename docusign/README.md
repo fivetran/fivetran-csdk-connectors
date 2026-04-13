@@ -4,29 +4,38 @@
 
 This connector extracts data from the Docusign eSignature API. It is designed to sync key objects related to the electronic signature process, including envelopes, recipients, documents (including their binary content), audit events, and templates. The extracted data can be used in a destination to enable analytics for Sales, Legal, Operations, and other teams tracking contract lifecycles, signature status, and compliance.
 
-## Contributor
+## Accreditation
 
 This example was contributed by [Arpit Kumar Khatri](https://github.com/ArpitKhatri1). The connector was developed as part of the [AI Accelerate](https://ai-accelerate.devpost.com/) hackathon.
 
 ## Requirements
 
-  - [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-  - Operating system:
-      - Windows: 10 or later (64-bit only)
-      - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86\_64])
-      - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86\_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template docusign
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
-  - Extracts core Docusign resources such as envelopes and templates and their related child objects.
-  - Incremental sync based on timestamp tracking.
-  - Pagination and performance: uses offset-based pagination with sensible batch sizes to efficiently iterate large result sets.
-  - Resiliency and partial-failure handling: per-envelope sub-resource failures are logged and skipped so a single broken item does not stop the entire sync.
-
+- Extracts core Docusign resources such as envelopes and templates and their related child objects.
+- Incremental sync based on timestamp tracking.
+- Pagination and performance: uses offset-based pagination with sensible batch sizes to efficiently iterate large result sets.
+- Resiliency and partial-failure handling: per-envelope sub-resource failures are logged and skipped so a single broken item does not stop the entire sync.
 
 ## Configuration file
 
@@ -39,28 +48,29 @@ The configuration for this connector is defined in `configuration.json`.
   "account_id": "<YOUR_DOCUSIGN_ACCOUNT_ID>"
 }
 ```
-Configuration parameters:
-  - access_token (required) - The OAuth2 access token for authenticating with the Docusign API.
-  - base_url (required) - The base URL for the Docusign API (e.g., `https://demo.docusign.net/restapi` for demo or `https://na3.docusign.net/restapi` for production).
-  - account_id (required) - The Account ID for your Docusign account.
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+Configuration parameters:
+- access_token (required) - The OAuth2 access token for authenticating with the Docusign API.
+- base_url (required) - The base URL for the Docusign API (e.g., `https://demo.docusign.net/restapi` for demo or `https://na3.docusign.net/restapi` for production).
+- account_id (required) - The Account ID for your Docusign account.
+
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector uses the `requests` library, which is pre-installed in the Fivetran environment. No additional libraries are required, so the `requirements.txt` file can be empty.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
 This connector authenticates using an OAuth2 bearer token. The token is provided in `configuration.json` and used in the `get_docusign_headers` function to create the required `Authorization` header for all API requests.
 
 To obtain credentials:
-1.  Configure an OAuth integration within your Docusign account (e.g., using JWT Grant or Authorization Code Grant).
-2.  Generate a valid `access_token`.
-3.  Find your `account_id` and correct `base_url` (e.g., `demo.docusign.net` or `na3.docusign.net`) from your Docusign Admin panel.
-4.  Add these three values to the `configuration.json` file.
+1. Configure an OAuth integration within your Docusign account (e.g., using JWT Grant or Authorization Code Grant).
+2. Generate a valid `access_token`.
+3. Find your `account_id` and correct `base_url` (e.g., `demo.docusign.net` or `na3.docusign.net`) from your Docusign Admin panel.
+4. Add these three values to the `configuration.json` file.
 
 ## Pagination
 
@@ -81,7 +91,7 @@ Data is processed within the `update` function and its various `fetch_*` helper 
 
 ## Error handling
 
-- API request errors: The `make_api_request` function  uses `response.raise_for_status()` to automatically raise an exception for HTTP 4xx (client) or 5xx (server) errors.
+- API request errors: The `make_api_request` function uses `response.raise_for_status()` to automatically raise an exception for HTTP 4xx (client) or 5xx (server) errors.
 - Resilient child object fetching: All functions that fetch data for a specific envelope (e.g., `fetch_audit_events`, `fetch_document_content`, `fetch_recipients_for_envelope`) are wrapped in `try...except` blocks. If an API call for one envelope's sub-resource fails, the error is logged using `log.warning` and an empty list or `None` is returned. This prevents a single failed document or recipient from stopping the entire sync.
 - Global error handling: The entire `update` function is wrapped in a `try...except Exception as e` block. Any unhandled exception will be caught and raised as a `RuntimeError`, which signals to Fivetran that the sync has failed.
 
@@ -91,9 +101,8 @@ This connector creates the following tables in the destination, as defined in th
 
 ### ENVELOPES
 
-  ```json
-  {
-    
+```json
+{
   "table": "envelopes",
   "primary_key": [
     "envelope_id"
@@ -115,8 +124,8 @@ This connector creates the following tables in the destination, as defined in th
 
 ### RECIPIENTS
 
-  ```json
-  {
+```json
+{
   "table": "recipients",
   "primary_key": [
     "envelope_id",
@@ -136,8 +145,8 @@ This connector creates the following tables in the destination, as defined in th
 
 ### ENHANCED_RECIPIENTS
 
-  ```json
-  {
+```json
+{
   "table": "enhanced_recipients",
   "primary_key": [
     "envelope_id",
@@ -159,9 +168,9 @@ This connector creates the following tables in the destination, as defined in th
 ```
 
 ### AUDIT_EVENTS
-  
-  ```json
-  {
+
+```json
+{
   "table": "audit_events",
   "primary_key": [
     "envelope_id",
@@ -180,9 +189,9 @@ This connector creates the following tables in the destination, as defined in th
 ```
 
 ### ENVELOPE_NOTIFICATIONS
-  
-  ```json
-  {
+
+```json
+{
   "table": "envelope_notifications",
   "primary_key": [
     "envelope_id",
@@ -200,8 +209,8 @@ This connector creates the following tables in the destination, as defined in th
 
 ### DOCUMENTS
 
-  ```json
-  {
+```json
+{
   "table": "documents",
   "primary_key": [
     "envelope_id",
@@ -219,8 +228,8 @@ This connector creates the following tables in the destination, as defined in th
 
 ### DOCUMENT_CONTENTS
 
-  ```json
-  {
+```json
+{
   "table": "document_contents",
   "primary_key": [
     "envelope_id",
@@ -236,8 +245,8 @@ This connector creates the following tables in the destination, as defined in th
 
 ### TEMPLATES
 
-  ```json
-  {
+```json
+{
   "table": "templates",
   "primary_key": [
     "template_id"
@@ -254,9 +263,9 @@ This connector creates the following tables in the destination, as defined in th
 ```
 
 ### CUSTOM_FIELDS
-  
-  ```json
-  {
+
+```json
+{
   "table": "custom_fields",
   "primary_key": [
     "envelope_id",

@@ -18,19 +18,29 @@ The connector implements bearer token authentication with comprehensive retry lo
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template data_camp
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 The connector supports the following features:
 
-- **Multiple content types**: Supports courses, projects, tracks, practices, assessments, and custom tracks
-- **Bearer token authentication**: Secure authentication using DataCamp API access tokens
-- **Flexible server configuration**: Optional base_url parameter supports live production and mock/test environments
-- **Retry logic with exponential backoff**: Automatic retries for failed API requests with exponential backoff 
-- **Data flattening**: Comprehensive flattening of nested objects and arrays into relational structures
-- **Breakout tables**: Separate tables for nested relationships (chapters, topics, content)
-- **State management**: Maintains sync state with checkpointing for reliable syncs
-- **Error handling**: Individual record error handling without stopping entire sync
-- **Comprehensive logging**: Detailed logging for troubleshooting and monitoring with retry attempt tracking
+- Multiple content types: Supports courses, projects, tracks, practices, assessments, and custom tracks
+- Bearer token authentication: Secure authentication using DataCamp API access tokens
+- Flexible server configuration: Optional base_url parameter supports live production and mock/test environments
+- Retry logic with exponential backoff: Automatic retries for failed API requests with exponential backoff
+- Data flattening: Comprehensive flattening of nested objects and arrays into relational structures
+- Breakout tables: Separate tables for nested relationships (chapters, topics, content)
+- State management: Maintains sync state with checkpointing for reliable syncs
+- Error handling: Individual record error handling without stopping entire sync
+- Comprehensive logging: Detailed logging for troubleshooting and monitoring with retry attempt tracking
 
 ## Configuration file
 
@@ -50,13 +60,13 @@ The connector requires bearer token authentication for the DataCamp LMS Catalog 
   - Leave blank to use the default DataCamp production server: `https://lms-catalog-api.datacamp.com`
   - You can specify a URL for testing or mock environments.
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector example uses the standard libraries provided by Python and does not require any additional packages.
 
-Note: The `fivetran_connector_sdk` and `requests` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -97,9 +107,9 @@ The connector processes JSON data from the DataCamp API and transforms it into s
 - Processes each endpoint with specific configuration parameters
 
 The `update` function processes each content type with a specific configuration:
-- **Endpoint configuration**: URL, table name, and primary key information from `__ENDPOINTS` constant
-- **Flatten parameters**: Content-specific flattening options (skip_keys, flatten_topic, flatten_licenses, etc.)
-- **Breakout configuration**: Optional child table specifications for nested arrays
+- Endpoint configuration: URL, table name, and primary key information from `__ENDPOINTS` constant
+- Flatten parameters: Content-specific flattening options (skip_keys, flatten_topic, flatten_licenses, etc.)
+- Breakout configuration: Optional child table specifications for nested arrays
 
 Data is delivered to Fivetran using upsert operations for each record, ensuring data consistency and enabling incremental updates.
 
@@ -109,7 +119,7 @@ The connector implements comprehensive error handling strategies following Fivet
 
 - Failed records don't stop the entire sync process
 - HTTP errors are caught and logged with severity levels
-- Automatic retries with exponential backoff 
+- Automatic retries with exponential backoff
 - Configurable timeout (30 seconds default) for API requests to prevent hanging
 - Uses Fivetran's logging framework with retry attempt tracking
 - Checkpoints progress after each endpoint to enable recovery

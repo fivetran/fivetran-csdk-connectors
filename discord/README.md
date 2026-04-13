@@ -15,7 +15,7 @@ This connector is particularly well-suited for the following AI/ML use cases:
 
 ## Requirements
 
-- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
@@ -24,6 +24,16 @@ This connector is particularly well-suited for the following AI/ML use cases:
 ## Getting started
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template discord
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -57,17 +67,17 @@ The connector requires the following configuration parameters in `configuration.
 - `sync_messages` (optional): Specifies whether to sync message data (default: `true`)
 - `message_limit` (optional): Maximum messages per channel to sync (default: `1000`)
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
-The `requirements.txt` file specifies the Python libraries required by the connector. This connector uses only the standard library and pre-installed packages
+The `requirements.txt` file specifies the Python libraries required by the connector. This connector uses only the standard library and pre-installed packages.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
-This connector uses Discord bot token authentication (Refer to `validate_configuration` function, and `_normalize_bot_token` function). To set up authentication:
+This connector uses Discord bot token authentication (refer to `validate_configuration` function, and `_normalize_bot_token` function). To set up authentication:
 
 1. Create a Discord application:
    - Go to [Discord Developer Portal](https://discord.com/developers/applications).
@@ -75,8 +85,8 @@ This connector uses Discord bot token authentication (Refer to `validate_configu
    - Navigate to the Bot section in the left sidebar.
 2. Create a bot:
    - Click Add Bot if no bot exists.
-   - Make a note of the bot token. 
-     > **Warning:** The bot token is a sensitive credential that grants access to your Discord bot. **Do not share this token with anyone or post it publicly.** Keep it secure and never check it into version control or expose it in public repositories.
+   - Make a note of the bot token.
+   > Note: The bot token is a sensitive credential that grants access to your Discord bot. Do not share this token with anyone or post it publicly. Keep it secure and never check it into version control or expose it in public repositories.
 3. Set bot permissions:
    - In the Bot section, scroll down to Privileged Gateway Intents.
    - Enable Server Members Intent (required for member data).
@@ -89,7 +99,7 @@ This connector uses Discord bot token authentication (Refer to `validate_configu
 
 ## Pagination
 
-The connector handles pagination automatically for all Discord API endpoints (Refer to `fetch_channel_messages` function):
+The connector handles pagination automatically for all Discord API endpoints (refer to `fetch_channel_messages` function):
 
 - Channels: Fetches all channels in a single request
 - Members: Uses Discord's member endpoint with 1000 member limit per request
@@ -99,7 +109,7 @@ The connector processes data in batches and checkpoints progress every 50 record
 
 ## Data handling
 
-The connector processes and normalizes Discord data for optimal analysis (Refer to `process_guild_data`, `process_channel_data`, `process_member_data`, and `process_message_data` functions):
+The connector processes and normalizes Discord data for optimal analysis (refer to `process_guild_data`, `process_channel_data`, `process_member_data`, and `process_message_data` functions):
 
 - JSON serialization: Complex objects (mentions, attachments, embeds) are stored as JSON strings
 - Timestamp normalization: All timestamps are converted to ISO format with UTC timezone
@@ -107,7 +117,7 @@ The connector processes and normalizes Discord data for optimal analysis (Refer 
 - Null handling: Gracefully handles missing or null values from the API
 - Schema evolution: Automatically adapts to new Discord API fields
 
-### Data Processing Pipeline
+### Data processing pipeline
 
 1. Fetch: Retrieve data from Discord API with rate limit handling
 2. Normalize: Convert Discord data format to Fivetran schema
@@ -125,7 +135,7 @@ The connector implements comprehensive error handling strategies (refer to `make
 - Data validation: Graceful handling of malformed API responses
 - State recovery: Checkpoint-based state management for sync resumption
 
-### Error Types Handled
+### Error types handled
 
 - 429 rate limited: Waits for retry-after header duration
 - 500-504 server errors: Exponential backoff retry strategy
@@ -138,18 +148,22 @@ The connector implements comprehensive error handling strategies (refer to `make
 The connector creates four main tables with the following structure:
 
 ### GUILD
+
 Primary key: `id`
 Contains complete Discord server information including settings, features, member counts, and metadata.
 
-### CHANNEL  
+### CHANNEL
+
 Primary key: `id`
 All channel types (text, voice, category, etc.) with permissions, settings, and configuration.
 
 ### MEMBER
+
 Primary key: `user_id` and `guild_id` (composite primary key)
 User profiles with roles, join dates, activity status, and server-specific information.
 
 ### MESSAGE
+
 Primary key: `id`
 Complete message data including content, attachments, embeds, reactions, and metadata.
 

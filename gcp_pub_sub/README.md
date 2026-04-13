@@ -6,7 +6,6 @@ This connector demonstrates how to sync data from Google Cloud Pub/Sub to a dest
 
 > Note: This example includes topic creation and message publishing functionality for testing purposes only. In production deployments, your application would publish messages to existing topics, and the connector would only consume and sync those messages.
 
-
 ## Requirements
 
 - [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
@@ -15,11 +14,19 @@ This connector demonstrates how to sync data from Google Cloud Pub/Sub to a dest
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
-
 ## Getting started
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template gcp_pub_sub
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -27,7 +34,6 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 - Automatic acknowledgment – Removes successfully processed messages from the subscription queue
 - JSON message parsing – Decodes and parses JSON-formatted message payloads
 - State checkpointing – Tracks sync progress for reliable data delivery
-
 
 ## Configuration file
 
@@ -47,8 +53,7 @@ The connector requires the following configuration parameters:
 - `subscription_name` – Name of the Pub/Sub subscription to consume messages from
 - `topic_name` – Name of the Pub/Sub topic associated with the subscription
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
-
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -61,8 +66,7 @@ google-api-core
 protobuf==6.30.1
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
-
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -82,7 +86,6 @@ To obtain a service account key:
 
 6. Copy the entire JSON content and paste it as a string in the `service_key` field of `configuration.json`.
 
-
 ## Pagination
 
 The connector implements batch-based pagination using the `max_messages` configuration parameter. The `pull_and_upsert_messages()` function continuously pulls messages in batches until no more messages are available:
@@ -93,7 +96,6 @@ The connector implements batch-based pagination using the `max_messages` configu
 4. Repeats until fewer messages than `max_messages` are returned, indicating all available messages have been processed
 
 This approach efficiently handles large message volumes while maintaining memory efficiency.
-
 
 ## Data handling
 
@@ -106,7 +108,6 @@ The connector processes Pub/Sub messages through the following workflow (see `pu
 5. Acknowledgment – Acknowledges processed messages to remove them from the subscription queue
 6. Checkpointing – Saves sync state after processing all available messages
 
-
 ## Error handling
 
 The connector implements error handling at multiple levels:
@@ -115,7 +116,6 @@ The connector implements error handling at multiple levels:
 - Topic creation – Handles `AlreadyExists` exception gracefully when creating test topics
 - Wraps message processing in try-except blocks to catch and report errors during:
 - All exceptions are re-raised as `RuntimeError` with contextual error messages for debugging.
-
 
 ## Tables created
 
