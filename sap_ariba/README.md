@@ -136,4 +136,4 @@ The connector creates the `ORDER` and `ITEM` tables in the destination from SAP 
 
 ## Additional considerations
 
-This example demonstrates how to work with timestamp conversion, pagination, and API retry patterns. It may require modifications before being used in production environments. For assistance, contact Fivetran Support.
+The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.
