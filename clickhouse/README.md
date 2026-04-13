@@ -67,10 +67,10 @@ clickhouse_connect==0.8.17
 
 The connector uses basic username and password authentication to connect to ClickHouse. These credentials are specified in the configuration file. The connector uses TLS/SSL for secure connections (indicated by the secure=True parameter in the client configuration). To obtain credentials:
 
-1. Create an account in the ClickHouse Cloud console
-2. Click on the "Connect" button for your cluster
-3. Choose the python Language client to get the connection details
-4. Use the connection details to fill in the configuration file
+1. Create an account in the ClickHouse Cloud console.
+2. Click on the "Connect" button for your cluster.
+3. Choose the python Language client to get the connection details.
+4. Use the connection details to fill in the configuration file.
 
 ## Pagination
 

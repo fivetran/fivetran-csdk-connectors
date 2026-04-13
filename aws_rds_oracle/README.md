@@ -114,9 +114,9 @@ You can add more tables to the `TABLES` list in `connector.py` as needed.
 
 This connector doesn't require any additional files, apart from the standard ones listed below:
 
-- `connector.py` contains the `update()` and `schema()` implementations for this example.
-- `configuration.json` provides a placeholder configuration you can copy and fill with your Oracle credentials.
-- `requirements.txt` declares the Oracle driver dependency used at runtime.
+- **connector.py** - Contains the `update()` and `schema()` implementations for this example.
+- **configuration.json** - Provides a placeholder configuration you can copy and fill with your Oracle credentials.
+- **requirements.txt** - Declares the Oracle driver dependency used at runtime.
 
 ## Additional considerations
 
