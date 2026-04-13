@@ -16,6 +16,16 @@ This connector syncs high-performance time series data from QuestDB to your Five
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template quest_db
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Syncs time series data from multiple QuestDB tables
@@ -45,8 +55,7 @@ The connector requires the following configuration parameters:
 
 Configuration parameters:
 
-
-- `tables`  (required) - Comma-separated list of table names to sync (e.g., `SENSOR_DATA`, `MARKET_TICKS`)
+- `tables` (required) - Comma-separated list of table names to sync (e.g., `SENSOR_DATA`, `MARKET_TICKS`)
 - `host` (optional) - QuestDB server hostname or IP address (defaults to `localhost`)
 - `port` (optional) - QuestDB REST API port (defaults to `9000`)
 - `username` (optional) - QuestDB username for HTTP basic authentication
@@ -54,13 +63,13 @@ Configuration parameters:
 - `batch_size` (optional) - Number of records to fetch per API request (defaults to `1000`)
 - `timestamp_column` (optional) - Column name for timestamp-based incremental sync (defaults to `timestamp`)
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector does not require a `requirements.txt` file as it only uses standard library modules and the `requests` library, which is pre-installed in the Fivetran environment.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 

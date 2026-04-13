@@ -1,9 +1,11 @@
-# RabbitMQ Connector SDK Example
+# RabbitMQ Connector Example
 
 ## Connector overview
+
 This connector syncs messages from RabbitMQ queues to Fivetran. The connector retrieves messages from specified queues using RabbitMQ's `basic_get` method. It consumes the messages only after a successful sync to prevent duplicate reads.
 
 ## Requirements
+
 - [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
@@ -11,9 +13,21 @@ This connector syncs messages from RabbitMQ queues to Fivetran. The connector re
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template rabbitmq
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
+
 - Synchronizes messages from multiple RabbitMQ queues
 - Captures complete message metadata including delivery tags, routing keys, headers, and timestamps
 - Implements incremental sync with per-queue state tracking using delivery tags
@@ -23,7 +37,6 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 - AMQPS/TLS support for secure communication
 
 ## Configuration file
-
 
 ```json
 {
@@ -39,7 +52,7 @@ The configuration keys required for your connector are as follows:
 - `queues` (required) - Comma-separated list of queue names to sync (for example: "orders,payments,notifications")
 - `batch_size` (optional) - Number of messages to process per batch (defaults to 100)
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -51,9 +64,10 @@ pika==1.3.2
 
 The connector uses the `pika` library (version 1.3.2) for connecting to and consuming messages from RabbitMQ.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
+
 The connector uses AMQP connection URLs for authentication. The connection URL includes credentials embedded in the URL format.
 
 Example configurations:
@@ -83,7 +97,7 @@ The connector automatically handles AMQPS/TLS connections when using the `amqps:
 
 ## Data handling
 
-**Important**: Messages are permanently removed from RabbitMQ after a successful sync. This connector consumes messages using `basic_ack`, which deletes them from the queue. Use this connector only with dedicated analytical queues (for example, dead-letter or audit queues); never use it on production operational queues.
+> Note: Messages are permanently removed from RabbitMQ after a successful sync. This connector consumes messages using `basic_ack`, which deletes them from the queue. Use this connector only with dedicated analytical queues (for example, dead-letter or audit queues); never use it on production operational queues.
 
 The connector performs message consumption and transformation. Refer to the `fetch_and_upsert_messages_batch` function for message handling:
 

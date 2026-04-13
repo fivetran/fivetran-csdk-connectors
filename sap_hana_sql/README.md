@@ -6,7 +6,7 @@ This connector extracts data from a SAP HANA database using the `hdbcli`. The co
 
 ## Requirements
 
-- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
@@ -14,7 +14,17 @@ This connector extracts data from a SAP HANA database using the `hdbcli`. The co
 
 ## Getting started
 
-Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template sap_hana_sql
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -38,7 +48,7 @@ The connector requires the following configuration parameters:
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -48,7 +58,7 @@ This connector requires the `hdbcli` library to connect to SAP HANA databases.
 hdbcli==2.25.29
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -68,8 +78,8 @@ The connector uses a batch-based approach for data retrieval rather than traditi
 This approach accomplishes the following:
 
 1. Prevents memory overflow when handling large datasets.
-2. Enables incremental processing of data without loading the entire result set
-3. Allows for checkpointing progress after each batch
+2. Enables incremental processing of data without loading the entire result set.
+3. Allows for checkpointing progress after each batch.
 
 Refer to the `fetch_and_upsert()` function, specifically the `cursor.fetchmany(batch_size)` implementation.
 

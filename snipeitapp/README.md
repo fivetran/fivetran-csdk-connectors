@@ -16,6 +16,16 @@ This connector demonstrates how to integrate Snipe-IT Asset Management data with
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template snipeitapp
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Incremental syncing based on `updated_at` timestamps for efficient data updates
@@ -42,13 +52,13 @@ The connector requires the following configuration parameters:
 - `api_token` (required): Your Snipe-IT Bearer token for API authentication with read permissions for all resources you want to sync
 - `base_url` (required): The base URL of your Snipe-IT instance (e.g., `https://your-snipeit-instance.com` for cloud or `http://localhost:8000` for self-hosted)
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector does not require any additional Python packages beyond the standard library and the pre-installed SDK packages.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -93,7 +103,7 @@ The connector implements comprehensive error-handling strategies (refer to the `
 
 The connector creates the following tables in your destination (refer to the `schema()` function):
 
-| Table | Description | Primary Key | Key Columns |
+| Table | Description | Primary key | Key columns |
 |-------|-------------|-------------|-------------|
 | hardware | Primary asset/hardware items tracked in Snipe-IT | `id` | `id`, `asset_tag`, `serial`, `name`, `model_id`, `model_name`, `status_label_id`, `status_label_name`, `category_id`, `category_name`, `manufacturer_id`, `manufacturer_name`, `supplier_id`, `location_id`, `location_name`, `created_at_datetime`, `updated_at_datetime`, `purchase_date_date`, `purchase_cost` |
 | users | Users who can be assigned assets or manage the system | `id` | `id`, `username`, `email`, `first_name`, `last_name`, `employee_num`, `jobtitle`, `phone`, `department_id`, `department_name`, `company_id`, `company_name`, `activated`, `created_at_datetime`, `updated_at_datetime` |

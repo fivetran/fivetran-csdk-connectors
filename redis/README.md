@@ -1,6 +1,7 @@
 # Redis Connector Example
 
 ## Connector overview
+
 This connector syncs data from Redis to Fivetran for historical analytics. It supports both traditional key-value data and RedisTimeSeries time series data with incremental synchronization.
 
 The connector is designed for applications that use Redis with persistence (AOF/RDB) as their primary database. It handles leaderboards, player profiles, real-time game state, and time series metrics. The connector retrieves all key-value pairs including sorted sets (leaderboards), hashes (player profiles), counters, and TimeSeries keys. It uses the Redis SCAN command for efficient, resumable synchronization with cursor-based pagination and state management.
@@ -13,13 +14,14 @@ The connector supports the following use cases:
 - Session analytics - User journey analysis when Redis stores session data with persistence enabled.
 - Time series metrics - Incremental sync of RedisTimeSeries data (IoT sensors, application metrics, financial data) using timestamp-based queries.
 
-Note: This connector is designed for scenarios where Redis is used as a persistent database (not cache).
+> Note: This connector is designed for scenarios where Redis is used as a persistent database (not cache).
 
 This connector is NOT suitable for:
 - Redis used purely as cache layer (use source database connector instead)
 - Ephemeral session stores with no persistence
 
 ## Requirements
+
 - [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
@@ -27,9 +29,21 @@ This connector is NOT suitable for:
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template redis
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
+
 - Synchronizes gaming leaderboards (sorted sets), player profiles (hashes), and statistics from Redis
 - Supports all Redis data types: strings (counters), hashes (player data), lists (match history), sets (achievements), and sorted sets (leaderboards)
 - RedisTimeSeries support: Automatic detection and incremental sync of TimeSeries keys using timestamp-based queries
@@ -43,11 +57,11 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 - SSL/TLS connection support for secure communication
 - Password authentication for protected Redis instances
 
-
 ## Configuration file
+
 The configuration keys required for your connector are as follows:
 
-```
+```json
 {
   "host": "<YOUR_REDIS_HOST>",
   "port": "<YOUR_REDIS_PORT>",
@@ -81,9 +95,10 @@ The configuration keys required for your connector are as follows:
 - `"game:*:stats"` - All game statistics
 - `"achievement:*"` - All achievement data
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
+
 The `requirements.txt` file specifies the Python libraries required by the connector:
 
 ```
@@ -92,14 +107,15 @@ redis
 
 The connector uses the `redis` library for connecting to and querying Redis databases.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
+
 The connector supports both local and cloud Redis deployments with flexible authentication.
 
 ### Basic configuration (no password)
 
-```
+```json
 {
   "host": "<YOUR_REDIS_HOST>",
   "port": "<YOUR_REDIS_PORT>",
@@ -109,7 +125,7 @@ The connector supports both local and cloud Redis deployments with flexible auth
 
 ### Password-protected Redis
 
-```
+```json
 {
   "host": "<YOUR_REDIS_HOST>",
   "port": "<YOUR_REDIS_PORT>",
@@ -118,9 +134,10 @@ The connector supports both local and cloud Redis deployments with flexible auth
 }
 ```
 
-Note: Redis Cloud and other managed services typically require both username (usually "default") and password. The connector automatically handles SSL/TLS when connecting to cloud providers.
+> Note: Redis Cloud and other managed services typically require both username (usually "default") and password. The connector automatically handles SSL/TLS when connecting to cloud providers.
 
 ## Pagination
+
 The connector implements Redis' `SCAN` command for efficient, non-blocking key iteration. Refer to the `scan_redis_keys` function in `connector.py` which handles pagination with the following approach:
 
 - Uses cursor-based iteration starting from cursor position 0
@@ -133,6 +150,7 @@ The connector implements Redis' `SCAN` command for efficient, non-blocking key i
 The `SCAN` operation is memory-efficient, non-blocking, and allows other Redis operations to continue during data extraction.
 
 ## Data handling
+
 The connector performs comprehensive data extraction and transformation.
 
 - Key discovery - Uses `SCAN` command with optional pattern filtering to discover matching keys (`scan_redis_keys`)
@@ -145,6 +163,7 @@ The connector performs comprehensive data extraction and transformation.
 The `update` function orchestrates the complete sync process with state management and error handling, coordinated by `sync_redis_data`.
 
 ## Error handling
+
 The connector implements comprehensive error handling strategies. Refer to the following functions in `connector.py`:
 
 - Connection validation (`create_redis_client`): Tests Redis connectivity during client creation with ping operation, handles SSL configuration errors
@@ -155,6 +174,7 @@ The connector implements comprehensive error handling strategies. Refer to the f
 - TimeSeries errors (`get_timeseries_range`): Catches and logs failures when querying TimeSeries data, returns empty list instead of crashing
 
 ## Tables created
+
 The connector creates a table in the destination based on your configuration (configurable via `table_name` parameter, defaults to `REDIS_DATA`):
 
 | Column        | Type         | Description                                                         |
@@ -169,4 +189,5 @@ The connector creates a table in the destination based on your configuration (co
 The table uses `key` as the primary key, enabling upserts for handling updated Redis values across syncs.
 
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

@@ -1,8 +1,11 @@
 # Zigpoll Connector Example
 
 ## Connector overview
+
 This connector retrieves survey response data from [Zigpoll](https://apidocs.zigpoll.com/reference) API and syncs it using Fivetran Connector SDK. The connector fetches data from all accounts accessible via the provided API token. It also handles pagination and incremental syncing to efficiently process large datasets.
+
 ## Requirements
+
 - [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
@@ -10,9 +13,21 @@ This connector retrieves survey response data from [Zigpoll](https://apidocs.zig
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template zigpoll
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
+
 - Fetches survey response data from all accessible Zigpoll accounts
 - Supports cursor-based pagination for efficient data retrieval
 - Incremental sync using timestamp-based checkpointing
@@ -23,27 +38,30 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 - Client-side timestamp filtering to prevent duplicate data processing
 
 ## Configuration file
+
 The connector requires an API token to authenticate with Zigpoll's API and optionally accepts a start date for initial sync. Obtain your API token from your Zigpoll account settings.
 
-```
+```json
 {
   "api_token": "<YOUR_ZIGPOLL_API_TOKEN>",
   "start_date": "<YOUR_OPTIONAL_START_DATE_AS_YYYY-MM-DD>"
 }
 ```
 
-Configuration Parameters:
+Configuration parameters:
 - `api_token` (required): Your Zigpoll API authentication token
 - `start_date` (optional): Date in YYYY-MM-DD format to start syncing data from (e.g., `"2023-01-01"`). If not provided, sync will start from EPOCH time
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
+
 The `requirements.txt` file specifies Python libraries required by the connector. This connector uses only the pre-installed packages in the Fivetran environment.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
+
 The connector uses API token authentication. To obtain your API token:
 1. Log in to your Zigpoll account.
 2. Navigate to account settings or API settings.
@@ -51,6 +69,7 @@ The connector uses API token authentication. To obtain your API token:
 4. Add the token to your `configuration.json` file.
 
 ## Pagination
+
 The connector handles cursor-based pagination automatically through modular functions:
 - `get_account_ids` function retrieves all accessible account IDs
 - `process_responses_page` function handles individual page processing with client-side filtering
@@ -59,6 +78,7 @@ The connector handles cursor-based pagination automatically through modular func
 The pagination processes responses in batches of 100 records per request and uses the `endCursor` from each response to fetch subsequent pages. The connector includes safeguards against infinite loops by detecting when the API returns the same cursor consecutively, which can occur when using timestamp filters with the Zigpoll API.
 
 ## Data handling
+
 Survey response data is processed and transformed through a modular approach:
 - Primary data structure preserved with `_id` as the primary key
 - Metadata dictionaries are flattened into separate columns with `metadata_` prefix
@@ -68,6 +88,7 @@ Survey response data is processed and transformed through a modular approach:
 - State management with checkpointing enables incremental syncing and resumability
 
 ## Error handling
+
 The connector implements comprehensive error handling through multiple layers:
 - Configuration validation ensures required parameters are present
 - API requests include retry logic with exponential backoff for transient errors
@@ -77,6 +98,7 @@ The connector implements comprehensive error handling through multiple layers:
 - Runtime error wrapping for sync failures to provide clear error messages
 
 ## Tables created
+
 This connector creates a single table, `RESPONSE`, which contains all survey response data from Zigpoll accounts.
 
 | Column        | Type                 | Description                             |
@@ -93,4 +115,5 @@ This connector creates a single table, `RESPONSE`, which contains all survey res
 | metadata_*    | STRING               | Flattened metadata fields with prefix   |
 
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

@@ -6,19 +6,29 @@ The TimescaleDB connector allows you to extract time-series data and vector data
 
 ## Requirements
 
-* [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
-* Operating system:
-  * Windows: 10 or later (64-bit only)
-  * macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
-  * Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
 
-Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template timescale_db
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
-- Connects to TimescaleDb database using `psycopg2`
+- Connects to TimescaleDB database using `psycopg2`
 - Supports incremental data extraction using timestamps with checkpointing
 - Handles both standard time-series data and vector data
 - Uses server-side cursors for memory-efficient data streaming
@@ -38,7 +48,7 @@ The connector requires the following configuration parameters in your `configura
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
@@ -48,11 +58,11 @@ The connector requires the `psycopg2` library to connect to TimescaleDB. Include
 psycopg2-binary==2.9.10
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
-The connector uses standard `PostgreSQL` authentication with a `username` and `password`. These credentials must be provided in the configuration file. Ensure the database user has appropriate read permissions on the tables you want to sync.
+The connector uses standard PostgreSQL authentication with a `username` and `password`. These credentials must be provided in the configuration file. Ensure the database user has appropriate read permissions on the tables you want to sync.
 
 ## Pagination
 
@@ -69,7 +79,7 @@ The connector:
 
 The connector processes and transforms data as follows (refer to `timescaleclient.py` lines 148-158):
 
-1. Queries data from TimescaleDb filtered by a timestamp column.
+1. Queries data from TimescaleDB filtered by a timestamp column.
 2. Converts row results to dictionaries using psycopg2's `RealDictCursor`.
 3. Converts vector data (iterables) to lists for proper JSON serialization.
 4. Tracks the latest timestamp for each table to support incremental syncs.
@@ -85,14 +95,14 @@ Error handling is implemented at several levels:
 
 ## Tables created
 
-The connector creates two tables in the destination. `sensor_data`contains time-series sensor data and `sensor_embeddings` contains vector embeddings related to sensors.
+The connector creates two tables in the destination. `sensor_data` contains time-series sensor data and `sensor_embeddings` contains vector embeddings related to sensors.
 
 The schemas for these tables are as follows:
 
 ```json
 {
   "table": "sensor_data",
-  "primary_key": ["sensor_id"],  
+  "primary_key": ["sensor_id"],
   "columns":{
     "sensor_id": "INT",
     "time": "UTC_DATETIME"
@@ -115,8 +125,7 @@ The schemas for these tables are as follows:
 
 ## Additional files
 
-- `timescaleclient.py` – This file handles the connection and data extraction from `TimescaleDb`, implementing server-side cursors, batch processing, and data serialization.
-
+- **`timescaleclient.py`** – This file handles the connection and data extraction from TimescaleDB, implementing server-side cursors, batch processing, and data serialization.
 
 ## Additional considerations
 

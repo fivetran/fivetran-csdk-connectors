@@ -1,36 +1,52 @@
 # TiDB Connector Example
 
 ## Connector overview
+
 This example demonstrates a source connector that reads rows from a TiDB database and upserts them into a Fivetran destination using the Connector SDK. It supports incremental replication based on a `created_at` timestamp, vector column parsing (optional), and stores per-table progress in the connector `state`.
 
-The connector is well suited for the following use cases: 
+The connector is well suited for the following use cases:
 - Incremental sync of application tables
 - Vector/embedding export for ML workflows
 - Incremental change capture for analytics
 
-## Contributor
+## Accreditation
+
 This example was contributed by [Nikhil Mankani](https://www.linkedin.com/in/nikhilmankani/).
 
 ## Requirements
-- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
+
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template tidb
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
+
 - Incremental replication driven by `created_at` timestamp.
 - Configurable table list and primary keys via `TABLES_PRIMARY_KEY_COLUMNS`.
 - Optional support for vector columns: Parse serialized embeddings into proper JSON lists via `VECTOR_TABLES_DATA`.
 - Robust error handling with per-table error markers stored in the connector `state`.
 
 ## Configuration file
+
 The connector expects a `configuration.json` file when running locally.
 
-```
+```json
 {
   "TIDB_HOST": "<YOUR_TIDB_HOST>",
   "TIDB_USER": "<YOUR_TIDB_USERNAME>",
@@ -42,7 +58,7 @@ The connector expects a `configuration.json` file when running locally.
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 Configuration parameters:
 
@@ -56,7 +72,6 @@ Configuration parameters:
   - `primary_key_column`: The primary key column name.
   - `vector_column`: The column containing vector data.
 
-
 ## Requirements file
 
 Include the following dependencies in your `requirements.txt` file:
@@ -66,7 +81,7 @@ pytidb>=0.0.11
 certifi>=2025.8.3
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -80,17 +95,20 @@ To set up authentication:
 
 For details on creating users and granting privileges, see [TiDB documentation](https://docs.pingcap.com/tidb/stable/manage-users-and-privileges).
 
-Note: For production usage, use secure secret storage and avoid checking credentials into source control.
+> Note: For production usage, use secure secret storage and avoid checking credentials into source control.
 
 ## Pagination
+
 The connector implements offset-based pagination using the limit and offset parameters in the `fetch_and_upsert_data` function, processing data in batches of 50 rows at a time. This approach helps manage memory usage and allows incremental reads of large tables without loading all matching rows into memory at once. If you need to adjust the batch size or use a different pagination strategy (such as keyset pagination), you can modify the relevant logic in `fetch_and_upsert_data`. For tables that require a different incremental column or cursor-based pagination, update the function accordingly.
 
 ## Data handling
+
 - Rows are fetched and passed to `process_row` for normalization.
 - `process_row` ensures naive datetimes are made timezone-aware (UTC) and attempts to parse vector columns into Python lists when `VECTOR_TABLES_DATA` is configured.
 - The declared schema (the `schema` function) depends on the `TABLES_PRIMARY_KEY_COLUMNS` and optional `VECTOR_TABLES_DATA` configuration for typed JSON columns.
 
 ## Error handling
+
 - Query-level failures (for example, missing `created_at` column) are logged, added to `state` under `{table_name}_last_error`, and the connector checkpoints state so operators can inspect errors without losing progress on other tables. See `fetch_and_upsert_data`.
 - Row-level failures are logged, and a sample of the row is stored in state under `{table_name}_last_row_error_sample` for debugging. See `fetch_and_upsert_data` and `process_row`.
 - Connection-level failures are recorded in the state under `last_connection_error`, and the exception is raised to allow the runtime to retry according to its backoff policy. See `create_tidb_connection` and `update`.
@@ -121,4 +139,5 @@ For vector tables (if configured), the schema includes typed JSON columns:
 ```
 
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

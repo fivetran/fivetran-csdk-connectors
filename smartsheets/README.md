@@ -1,22 +1,33 @@
 # Smartsheet API Connector Example
 
 ## Connector overview
+
 This connector demonstrates how to sync row-level data from Smartsheet using the Fivetran Connector SDK, and the Smartsheet [Sheets API](https://smartsheet.redoc.ly/tag/sheets) and [Reports API](https://smartsheet.redoc.ly/tag/reports). It retrieves rows from sheets and reports, dynamically maps columns using column IDs, and emits those rows to destination tables.
 
-
 ## Requirements
-- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
+
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
-
 ## Getting started
-Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template smartsheets
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
+
 - Incremental syncs using `rowsModifiedSince` to sync only updated rows
 - Dynamic schema based on column headers, mapping `columnId` to column names
 - Optional row-level metadata fields like `rowNumber`, `createdAt`, and `modifiedAt`
@@ -24,8 +35,8 @@ Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/se
 - Multiple sheets and reports in a single connector instance
 - Uses `op.upsert()` for each row and checkpoints with the current sync timestamp
 
-
 ## Configuration file
+
 The connector requires the following configuration parameters:
 
 ```json
@@ -37,40 +48,40 @@ The connector requires the following configuration parameters:
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
-
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
+
 This connector requires the following Python packages:
 
 ```
 requests
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
-
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
+
 Authentication is handled via a Bearer token using the Authorization header.
 
-
 ## Pagination
+
 Pagination is not currently implemented in this example.
 
-
 ## Data handling
+
 - Each row in the Smartsheet is returned as a dictionary of cell values, mapped to the correct column titles.
 - Column names are dynamically derived from the `columns` array in the API response.
 - Null or empty cells are ignored.
 
-
 ## Error handling
+
 - API errors are surfaced using `requests.raise_for_status()`.
 - Any failure in authentication, network, or sheet access will raise an exception.
 - You can extend this with `try/except` blocks and log warnings for partial errors.
 
-
 ## Tables created
+
 The connector creates a `SMARTSHEET_TABLE_NAME` table:
 
 ```json
@@ -83,6 +94,6 @@ The connector creates a `SMARTSHEET_TABLE_NAME` table:
 }
 ```
 
-
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

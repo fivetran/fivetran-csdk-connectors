@@ -6,9 +6,27 @@ This connector syncs data from Tulip to Fivetran destinations. Tulip is a frontl
 
 To use this connector, you need access to a Tulip instance and a Tulip API key with tables read scope.
 
+## Requirements
+
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
+- Operating system:
+  - Windows: 10 or later (64-bit only)
+  - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
+  - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
+
 ## Getting started
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template tulip_interfaces
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
 
@@ -50,9 +68,14 @@ Configuration parameters:
 - `sync_from_date` (optional) - ISO 8601 timestamp to start initial sync (defaults to beginning of time if omitted).
 - `custom_filter_json` (optional) - JSON array of Tulip API filter objects, refer to [Tulip API docs for JSON definition](https://support.tulip.co/apidocs/list-records-of-a-tulip-table#:~:text=false-,filters,-An%20optional%20array) (defaults to empty array if omitted).
 
-Note: The connector automatically excludes Linked Table Fields (`tableLink` type) to reduce database load on the Tulip API. System fields (`id`, `_createdAt`, `_updatedAt`, `_sequenceNumber`) and all non-`tableLink` custom fields are always included.
+> Note: The connector automatically excludes Linked Table Fields (`tableLink` type) to reduce database load on the Tulip API. System fields (`id`, `_createdAt`, `_updatedAt`, `_sequenceNumber`) and all non-`tableLink` custom fields are always included.
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+
+## Requirements file
+
+This example does not require a `requirements.txt` file because it uses only packages that are already available in the Fivetran environment. If you add a `requirements.txt` file for customization, leave it empty unless you introduce additional external dependencies.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -66,7 +89,7 @@ This connector uses HTTP Basic Authentication with Tulip API credentials:
 
 The connector passes the API key and secret as HTTP Basic Auth credentials to all Tulip API endpoints.
 
-Refer to the `def schema()` and `def update()` funtions for implementation details.
+Refer to the `def schema()` and `def update()` functions for implementation details.
 
 ## Pagination
 
@@ -75,6 +98,7 @@ The connector implements a two-phase cursor-based synchronization strategy to ha
 Refer to `def update()` function for implementation details.
 
 ### Phase 1: BOOTSTRAP mode (historical data load)
+
 - Uses `_sequenceNumber` as primary cursor to avoid offset pagination overhead
 - Filters: `_sequenceNumber > last_sequence` (and optionally `_updatedAt > sync_from_date`)
 - Sorts by `_sequenceNumber` in ascending order
@@ -82,6 +106,7 @@ Refer to `def update()` function for implementation details.
 - Transitions to INCREMENTAL mode when bootstrap completes
 
 ### Phase 2: INCREMENTAL mode (ongoing updates)
+
 - Primary cursor: `_sequenceNumber > last_sequence`
 - Secondary filter: `_updatedAt > (last_updated_at - 60s)` (60-second lookback)
 - Sorts by `_sequenceNumber` in ascending order
@@ -89,6 +114,7 @@ Refer to `def update()` function for implementation details.
 - Prevents infinite loops when multiple records share the same `_updatedAt` timestamp
 
 ### Checkpointing
+
 - State is checkpointed every 500 records with: `cursor_mode`, `last_sequence`, and `last_updated_at`
 - Enables resumable syncs if connector fails mid-batch
 

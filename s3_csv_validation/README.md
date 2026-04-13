@@ -1,6 +1,7 @@
 # S3 CSV File Reader with Data Validation Connector Example
 
 ## Connector overview
+
 This connector demonstrates how to retrieve a CSV file from an Amazon S3 bucket, validate its contents, and sync the records into a destination table using the Fivetran Connector SDK.
 
 Key features include:
@@ -14,20 +15,30 @@ This example is ideal for:
 - Handling semi-structured input with field-type enforcement.
 - Ingesting flat-file data from cloud object storage.
 
-
 ## Requirements
-- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)   
+
+- [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
-
 ## Getting started
-Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
+
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template s3_csv_validation
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
 
 ## Features
+
 - Connects to Amazon S3 using `boto3`.
 - Reads a CSV file and loads it into a DataFrame.
 - Validates:
@@ -41,8 +52,8 @@ Refer to the [Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/se
 - Skips and logs invalid rows.
 - Upserts valid rows into a table called `DATA`.
 
-
 ## Configuration file
+
 The connector requires the following configuration parameters:
 
 ```json
@@ -55,10 +66,10 @@ The connector requires the following configuration parameters:
 }
 ```
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
-
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
+
 This connector requires the following Python packages:
 
 ```
@@ -66,32 +77,32 @@ boto3==1.35.97
 pandas==2.2.3
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
-
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
+
 Authentication is handled via standard AWS credentials passed into the `boto3.client()` constructor.
 
-
 ## Pagination
-Not Applicable for this connector, as it processes a single CSV file.
 
+Not applicable for this connector, as it processes a single CSV file.
 
 ## Data handling
+
 - CSV is read into a `pandas.DataFrame`.
 - Each row is validated field-by-field.
 - If any validation fails, the row is skipped.
 - Valid rows are upserted using `op.upsert()`.
 
-
 ## Error handling
+
 - Rows with invalid fields are skipped and logged using `log.warning()`.
 - Errors include specific reasons (e.g., invalid format, missing value).
 - The `print_error_message()` function outputs detailed validation failures.
 - Sync state is checkpointed after processing all rows.
 
-
 ## Tables created
+
 The connector creates a `DATA` table:
 
 ```json
@@ -110,6 +121,6 @@ The connector creates a `DATA` table:
 }
 ```
 
-
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

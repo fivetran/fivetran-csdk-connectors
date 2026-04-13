@@ -1,9 +1,11 @@
 # RethinkDB Connector Example
 
 ## Connector overview
+
 This example demonstrates how to use the Fivetran Connector SDK to sync data from RethinkDB, an open-source database designed for real-time applications. RethinkDB is known for its changefeeds feature that pushes data to applications in real-time, making it ideal for collaborative apps, multiplayer games, streaming analytics, and IoT systems. This connector enables organizations to replicate their RethinkDB data to a data warehouse for analysis, reporting, and business intelligence.
 
 ## Requirements
+
 - [Supported Python versions](https://github.com/fivetran/fivetran-csdk-connectors/blob/main/README.md#requirements)
 - Operating system:
   - Windows: 10 or later (64-bit only)
@@ -11,9 +13,21 @@ This example demonstrates how to use the Fivetran Connector SDK to sync data fro
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
 ## Getting started
+
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template rethink_db
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
+
 - Automatic schema discovery that detects all tables and their primary keys in the RethinkDB database
 - Intelligent incremental sync using timestamp fields (updated_at, modified_at, timestamp, created_at)
 - Automatic fallback to full table sync for tables without timestamp fields
@@ -23,6 +37,7 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 - Connection pooling and proper resource cleanup
 
 ## Configuration file
+
 The connector requires the following configuration parameters:
 
 ```json
@@ -45,18 +60,20 @@ Configuration parameters:
 - `password`: Password for authentication (optional, leave empty for unauthenticated connections)
 - `use_ssl`: Enable SSL/TLS encryption for secure connections (true or false, defaults to false)
 
-Note: Ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
+
 The connector requires the `rethinkdb` package to connect to RethinkDB databases.
 
 ```
 rethinkdb
 ```
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
+
 This connector supports both authenticated and unauthenticated connections to RethinkDB. Authentication is configured in the `connect_to_rethinkdb()` function.
 
 For authenticated connections:
@@ -73,9 +90,11 @@ SSL/TLS connections:
 2. The connector uses Python's default SSL context for secure connections.
 
 ## Pagination
+
 This connector does not use pagination. RethinkDB cursors automatically stream data from tables without requiring pagination logic. The connector processes records sequentially using cursor iteration (refer to the `sync_table_data()` function at line 281), with checkpointing every 100 records to handle large datasets efficiently.
 
 ## Data handling
+
 The connector processes RethinkDB data as follows:
 
 Schema discovery: The `schema()` function dynamically discovers all tables in the database and retrieves their primary key definitions using `table.info()`. This ensures the connector adapts to schema changes automatically.
@@ -89,6 +108,7 @@ Streaming: The connector uses RethinkDB cursors to stream data from tables, avoi
 Checkpointing: Progress is checkpointed every 100 records (configured via `__CHECKPOINT_INTERVAL`) to enable resumable syncs in case of interruptions. The state also tracks the maximum timestamp for each table to support incremental syncs. Refer to the `sync_table_data()` function.
 
 ## Error handling
+
 Error handling is implemented throughout the connector:
 
 Connection errors: The `connect_to_rethinkdb()` function catches connection failures and raises descriptive errors to help diagnose network or authentication issues.
@@ -111,7 +131,8 @@ The connector dynamically creates tables based on the schema discovered in your 
 | `COMMENTS` | `id` | Comments on tasks with reactions stored as JSON objects |
 | `ACTIVITY_LOG` | `id` | Real-time activity tracking with action details stored as JSON |
 
-Note: The connector automatically detects the primary key for each table. Complex data types like arrays and nested objects are converted to JSON strings for storage in the destination warehouse.
+> Note: The connector automatically detects the primary key for each table. Complex data types like arrays and nested objects are converted to JSON strings for storage in the destination warehouse.
 
 ## Additional considerations
+
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.

@@ -16,6 +16,16 @@ This connector integrates with the Sendcloud API to extract shipment data includ
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
 
+To initialize a new Connector SDK project using this connector as a starting point, run:
+
+```
+fivetran init --template sendcloud
+```
+
+`fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
+
+> Note: Ensure you have updated the `configuration.json` file with the necessary parameters before running `fivetran debug`. See the [Configuration file](#configuration-file) section for details on the required configuration parameters.
+
 ## Features
 
 - Incremental data synchronization using cursor-based pagination
@@ -45,35 +55,35 @@ Configuration parameters:
 - `start_date`: ISO date to begin synchronization in YYYY-MM-DD format (required)
 - `use_mock_server`: Set to "true" to use Stoplight mock server for testing, "false" for production API (optional, defaults to "false")
 
-Note: Ensure that [`configuration.json`](configuration.json) file is not checked into version control to protect sensitive information.
+> Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran-csdk-connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran-csdk-connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
 ## Requirements file
 
 This connector does not require any additional Python packages beyond the pre-installed packages in the Fivetran environment.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
-This connector uses HTTP Basic Authentication to connect to the Sendcloud API. The credentials are specified in the configuration file and encoded as Base64 in the Authorization header (refer to the `get_auth_header()` function in [`connector.py`](connector.py)).
+This connector uses HTTP Basic Authentication to connect to the Sendcloud API. The credentials are specified in the configuration file and encoded as Base64 in the Authorization header (refer to the `get_auth_header()` function in `connector.py`).
 
 To set up authentication:
 
 1. Log in to your Sendcloud account at https://account.sendcloud.com.
 2. Navigate to **Settings > Integrations > API**.
 3. Generate or retrieve your API public key (`username`) and secret key (`password`).
-4. Add the `username` and `password` to the [`configuration.json`](configuration.json) file.
+4. Add the `username` and `password` to the `configuration.json` file.
 5. Set the `start_date` to begin synchronization from a specific date.
 
 ## Pagination
 
-The connector implements cursor-based pagination to handle large datasets efficiently (refer to the `update()` and `determine_next_cursor()` functions in [`connector.py`](connector.py)).
+The connector implements cursor-based pagination to handle large datasets efficiently (refer to the `update()` and `determine_next_cursor()` functions in `connector.py`).
 
 The Sendcloud API returns pagination metadata in the response with a next_cursor field. The connector extracts this cursor and uses it in subsequent requests to fetch the next page. If the API does not provide an explicit cursor and the page is full, the connector generates a cursor using the encode_cursor function as a fallback mechanism. Pagination continues until no more records are returned or the API indicates there are no more pages.
 
 ## Data handling
 
-The connector processes shipment data through multiple stages (refer to the `flatten_shipment_data()` and `process_shipment_arrays()` functions in [`connector.py`](connector.py)):
+The connector processes shipment data through multiple stages (refer to the `flatten_shipment_data()` and `process_shipment_arrays()` functions in `connector.py`):
 
 - Main shipment fields are flattened into the primary shipments table
 - Nested single objects (addresses, prices, delivery dates) are flattened into the same table with prefixed column names
@@ -83,7 +93,7 @@ The connector processes shipment data through multiple stages (refer to the `fla
 
 ## Error handling
 
-The connector implements comprehensive error handling with automatic retry logic (refer to the `fetch_shipments_page()` function in [`connector.py`](connector.py)):
+The connector implements comprehensive error handling with automatic retry logic (refer to the `fetch_shipments_page()` function in `connector.py`):
 
 - HTTP errors with status codes 400, 401, 403, 404 are treated as permanent failures and fail immediately without retry
 - Transient errors (500, 502, 503, 504, timeouts, connection errors) trigger exponential backoff retry logic up to 3 attempts
@@ -96,7 +106,7 @@ The connector implements comprehensive error handling with automatic retry logic
 
 The connector creates the following tables in the destination:
 
-| Table Name          | Primary Key                                               | Description                                                   | Key Columns                                                                                                                                   |
+| Table name          | Primary key                                               | Description                                                   | Key columns                                                                                                                                   |
 |---------------------|-----------------------------------------------------------|---------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------|
 | shipment            | `id`                                                      | Main table with flattened shipment information                | order_number, from_name, from_address_line_1, to_name, to_address_line_1, ship_with_type, total_order_price_value, total_order_price_currency |
 | shipment_parcel     | `shipment_id`, `parcel_id`                                | Parcels with tracking and dimensional information             | tracking_number, tracking_url, status_message, status_code, dimensions_length, dimensions_width, dimensions_height, weight_value, weight_unit |
