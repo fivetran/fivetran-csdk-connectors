@@ -52,7 +52,7 @@ Run the `.github/scripts/setup-hooks.sh` script from the root of the repository 
 These are ready-to-use connectors, requiring minimal modifications to get started. Browse by category or search for your specific data source:
 
 <details class="details-heading" open="open">
-<summary>📋 Full List of Connectors (98 connectors)</summary>
+<summary>📋 Full List of Connectors (99 connectors)</summary>
 
 ### Databases
 
@@ -104,6 +104,7 @@ These are ready-to-use connectors, requiring minimal modifications to get starte
 
 ### SaaS & APIs
 
+- **[amazon_video_central](https://github.com/fivetran/fivetran_csdk_connectors/tree/main/amazon_video_central)** - Sync report data from Amazon Video Central API
 - **[awardco](https://github.com/fivetran/fivetran_csdk_connectors/tree/main/awardco)** - Sync data from Awardco rewards platform
 - **[betterstack](https://github.com/fivetran/fivetran_csdk_connectors/tree/main/betterstack)** - Sync uptime monitoring data from Better Stack
 - **[checkly](https://github.com/fivetran/fivetran_csdk_connectors/tree/main/checkly)** - Sync monitoring check data and analytics from Checkly

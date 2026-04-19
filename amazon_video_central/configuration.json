@@ -1,0 +1,10 @@
+{
+  "refresh_token": "<YOUR_REFRESH_TOKEN>",
+  "client_id": "<YOUR_CLIENT_ID>",
+  "client_secret": "<YOUR_CLIENT_SECRET>",
+  "account_id": "<YOUR_ACCOUNT_ID>",
+  "report_group_ids": "<YOUR_REPORT_GROUP_IDS>",
+  "initial_sync_start": "<YOUR_INITIAL_SYNC_START>",
+  "fernet_key": "<YOUR_FERNET_KEY>"
+}
+
