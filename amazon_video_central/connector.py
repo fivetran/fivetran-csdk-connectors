@@ -55,19 +55,21 @@ import base64
 import re
 
 __TOKEN_URL = "https://api.amazon.co.uk/auth/o2/token"
+__BASE_URL = "https://videocentral.amazon.com/apis/v1"
 __DEFAULT_MAX_RETRIES = 5
 __DEFAULT_BASE_DELAY_SECONDS = 30
 __REQUEST_TIMEOUT = 30
+__PAGE_SIZE = 50
 
 
 def validate_configuration(configuration: dict):
     """
-    Validate the configuration dictionary to ensure it contains all required parameters.
+    Validate the configuration dictionary to ensure it contains all required parameters with correct values.
     This function is called at the start of the update method to ensure that the connector has all necessary configuration values.
     Args:
         configuration: a dictionary that holds the configuration settings for the connector.
     Raises:
-        ValueError: if any required configuration parameter is missing.
+        ValueError: if any required configuration parameter is missing, empty, or invalid.
     """
     required_configs = [
         "refresh_token",
@@ -81,6 +83,25 @@ def validate_configuration(configuration: dict):
     for key in required_configs:
         if key not in configuration:
             raise ValueError(f"Missing required configuration value: {key}")
+        if not str(configuration[key]).strip():
+            raise ValueError(f"Configuration value for '{key}' must not be empty")
+
+    # Validate report_group_ids contains at least one non-blank entry
+    report_groups = [rg.strip() for rg in configuration["report_group_ids"].split(",") if rg.strip()]
+    if not report_groups:
+        raise ValueError("Configuration value for 'report_group_ids' must contain at least one report group ID")
+
+    # Validate initial_sync_start is a valid ISO-8601 timestamp
+    try:
+        datetime.fromisoformat(configuration["initial_sync_start"].replace("Z", "+00:00"))
+    except ValueError:
+        raise ValueError("Configuration value for 'initial_sync_start' must be a valid ISO-8601 timestamp (e.g. 2020-01-01T00:00:00.000Z)")
+
+    # Validate fernet_key is a valid Fernet key
+    try:
+        Fernet(configuration["fernet_key"].encode())
+    except Exception:
+        raise ValueError("Configuration value for 'fernet_key' must be a valid base64-encoded Fernet key")
 
 
 def encrypt_token(token: str, fernet_key: str) -> str:
@@ -162,7 +183,7 @@ def retry_with_backoff(
         # Retry on rate limiting (429) and server errors (5xx)
         if response.status_code in [429, 500, 502, 503, 504]:
             if attempt < max_retries:
-                delay = base_delay * (2**attempt)  # Exponential backoff
+                delay = min(base_delay * (2**attempt), 300)  # Exponential backoff capped at 5 minutes
                 log.warning(
                     f"Retrying {operation_name} (status {response.status_code}) in {delay} seconds (attempt {attempt + 1}/{max_retries + 1})"
                 )
@@ -184,14 +205,44 @@ def retry_with_backoff(
 
 
 def _post_token_request(data: dict, headers: dict) -> requests.Response:
+    """
+    Send the OAuth token refresh request to the Amazon token endpoint.
+
+    Args:
+        data: Form-encoded request body containing token refresh parameters.
+        headers: HTTP headers to include with the token request.
+
+    Returns:
+        The HTTP response returned by the token endpoint.
+    """
     return requests.post(__TOKEN_URL, data=data, headers=headers, timeout=__REQUEST_TIMEOUT)
 
 
 def _get_api_request(url: str, headers: dict, params: Optional[Dict]) -> requests.Response:
+    """
+    Send a GET request to an Amazon Video Central API endpoint.
+
+    Args:
+        url: The API endpoint URL to request.
+        headers: HTTP headers to include with the API request.
+        params: Optional query parameters to include in the request.
+
+    Returns:
+        The HTTP response returned by the API endpoint.
+    """
     return requests.get(url, headers=headers, params=params, timeout=__REQUEST_TIMEOUT)
 
 
 def _get_download_request(download_url: str) -> requests.Response:
+    """
+    Download a report file from the provided URL.
+
+    Args:
+        download_url: The fully qualified URL for the report download.
+
+    Returns:
+        The HTTP response containing the downloadable file content.
+    """
     return requests.get(download_url, timeout=__REQUEST_TIMEOUT)
 
 
@@ -253,7 +304,6 @@ def make_api_request(
     url: str,
     access_token: str,
     params: Optional[Dict] = None,
-    configuration: Optional[Dict] = None,
 ) -> Dict[str, Any]:
     """
     Make an authenticated API request to Amazon Video Central with retry logic for rate limiting.
@@ -262,7 +312,6 @@ def make_api_request(
         url: API endpoint URL
         access_token: Valid access token
         params: Optional query parameters
-        configuration: Optional configuration dictionary for retry settings
 
     Returns:
         JSON response data
@@ -287,7 +336,6 @@ def paginated_request(
     base_url: str,
     access_token: str,
     params: Optional[Dict] = None,
-    configuration: Optional[Dict] = None,
 ) -> List[Dict]:
     """
     Handle paginated API requests and return all results.
@@ -297,14 +345,13 @@ def paginated_request(
         base_url: Base API endpoint URL
         access_token: Valid access token
         params: Optional query parameters
-        configuration: Optional configuration dictionary for retry settings
 
     Returns:
         List of all items from all pages
     """
     all_items = []
     offset = 0
-    limit = 50  # Use larger page size for efficiency
+    limit = __PAGE_SIZE
 
     if params is None:
         params = {}
@@ -313,7 +360,7 @@ def paginated_request(
         current_params = params.copy()
         current_params.update({"limit": limit, "offset": offset})
 
-        response_data = make_api_request(base_url, access_token, current_params, configuration)
+        response_data = make_api_request(base_url, access_token, current_params)
 
         items = response_data.get("data", [])
         all_items.extend(items)
@@ -327,15 +374,12 @@ def paginated_request(
     return all_items
 
 
-def download_and_parse_csv(
-    download_url: str, configuration: Optional[Dict] = None
-) -> List[Dict[str, Any]]:
+def download_and_parse_csv(download_url: str) -> List[Dict[str, Any]]:
     """
     Download a ZIP file from a pre-signed URL and parse the CSV inside with retry logic for rate limiting.
 
     Args:
         download_url: Pre-signed S3 URL to download ZIP file
-        configuration: Optional configuration dictionary for retry settings
 
     Returns:
         List of CSV records as dictionaries
@@ -434,7 +478,7 @@ def update(configuration: dict, state: dict):
     # Extract configuration parameters
     account_id = configuration["account_id"]
     report_group_ids = [rg.strip() for rg in configuration["report_group_ids"].split(",")]
-    initial_sync_start = configuration.get("initial_sync_start", "2020-01-01T00:00:00.000Z")
+    initial_sync_start = configuration["initial_sync_start"]
 
     # Get the state variable for the sync, if needed.
     # For the first sync, state will be an empty dictionary.
@@ -473,7 +517,6 @@ def update(configuration: dict, state: dict):
     # Get access token and new refresh token
     access_token, new_refresh_token = get_access_token(configuration, state)
 
-    base_url = "https://videocentral.amazon.com/apis/v1"
 
     # Process each report group
     for report_group_id in report_group_ids:
@@ -500,10 +543,8 @@ def update(configuration: dict, state: dict):
             )
 
         # Get channels and studios
-        channels_url = f"{base_url}/accounts/{account_id}/{report_group_id}"
-        channels_studios = paginated_request(
-            channels_url, access_token, configuration=configuration
-        )
+        channels_url = f"{__BASE_URL}/accounts/{account_id}/{report_group_id}"
+        channels_studios = paginated_request(channels_url, access_token)
 
         log.info(
             f"Found {len(channels_studios)} channels/studios in report group: {report_group_id}"
@@ -527,10 +568,8 @@ def update(configuration: dict, state: dict):
                 continue
 
             # Get report types for this channel/studio
-            report_types_url = f"{base_url}/accounts/{account_id}/{report_group_id}/{channel_studio_id}/reportTypes"
-            report_types = paginated_request(
-                report_types_url, access_token, configuration=configuration
-            )
+            report_types_url = f"{__BASE_URL}/accounts/{account_id}/{report_group_id}/{channel_studio_id}/reportTypes"
+            report_types = paginated_request(report_types_url, access_token)
 
             # Process each report type
             for report_type in report_types:
@@ -539,7 +578,7 @@ def update(configuration: dict, state: dict):
                 cadence = report_type["cadence"]
 
                 # Get reports for this report type using the appropriate sync time
-                reports_url = f"{base_url}/accounts/{account_id}/{report_group_id}/{channel_studio_id}/reportTypes/{report_type_id}/reports"
+                reports_url = f"{__BASE_URL}/accounts/{account_id}/{report_group_id}/{channel_studio_id}/reportTypes/{report_type_id}/reports"
                 reports_params = {"modifiedDateGte": sync_time_for_group}
 
                 # Make initial API call to check total count
@@ -547,7 +586,6 @@ def update(configuration: dict, state: dict):
                     reports_url,
                     access_token,
                     {**reports_params, "limit": 1, "offset": 0},
-                    configuration,
                 )
                 total_reports = initial_response.get("total", 0)
 
@@ -562,9 +600,7 @@ def update(configuration: dict, state: dict):
                 )
 
                 # If there are reports, get all of them
-                reports = paginated_request(
-                    reports_url, access_token, reports_params, configuration
-                )
+                reports = paginated_request(reports_url, access_token, reports_params)
 
                 # Create table name from report group, channel name, territory, report type, and cadence
                 table_name = clean_table_name(
@@ -609,7 +645,7 @@ def update(configuration: dict, state: dict):
                     op.upsert(table="report_metadata", data=report_metadata)
 
                     # Download and parse CSV data
-                    csv_records = download_and_parse_csv(download_url, configuration)
+                    csv_records = download_and_parse_csv(download_url)
 
                     for record in csv_records:
                         # Add report_id to link back to metadata

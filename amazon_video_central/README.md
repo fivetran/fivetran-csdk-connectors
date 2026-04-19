@@ -8,7 +8,6 @@ This Fivetran connector extracts report data from Amazon Video Central API and s
 
 - [Supported Python versions](https://github.com/fivetran/fivetran_csdk_connectors/blob/main/README.md#requirements)
 - Operating system:
-- 
   - Windows: 10 or later (64-bit only)
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
@@ -36,7 +35,7 @@ fivetran init --template amazon_video_central
 - Automatic pagination – Handles paginated API responses automatically
 - CSV processing – Downloads and parses ZIP files containing CSV data
 - Dynamic table creation – Creates tables based on report group, channel/studio, territory, and report type
-- Configurable retry logic – Customizable retry attempts and backoff delays
+- Automatic retry logic – Uses built-in retry attempts and exponential backoff for transient failures
 - Comprehensive error handling – Graceful handling of API failures and network issues
 
 ## Configuration file
