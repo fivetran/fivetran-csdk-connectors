@@ -106,7 +106,7 @@ On subsequent syncs the connector uses `last_sync_time` from state to fetch only
 
 Refer to `retry_with_backoff(func, max_retries, base_delay, operation_name)`.
 
-All HTTP calls — token refresh, API requests, and file downloads — are wrapped in `retry_with_backoff`, which retries on status codes 429, 500, 502, 503, and 504 using exponential backoff with configurable attempts and base delay controlled by `__DEFAULT_MAX_RETRIES` and `__DEFAULT_BASE_DELAY_SECONDS` connector constants. When retries are exhausted, a `RuntimeError` is raised for Fivetran compliance. A 401 response raises `RuntimeError` immediately without retrying. Failed file downloads log a warning and skip the affected report so the rest of the sync continues.
+All HTTP calls — token refresh, API requests, and file downloads — are wrapped in `retry_with_backoff`, which retries on status codes 429, 500, 502, 503, and 504 using exponential backoff with configurable attempts and base delay controlled by `__DEFAULT_MAX_RETRIES` and `__DEFAULT_BASE_DELAY_SECONDS` connector constants. A 401 response raises `RuntimeError` immediately without retrying. If retries are exhausted for a download, ZIP extraction, or CSV parsing operation, the connector raises `RuntimeError` and the sync stops rather than skipping the affected report.
 
 
 ## Tables created
