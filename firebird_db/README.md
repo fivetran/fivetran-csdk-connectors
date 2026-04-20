@@ -85,6 +85,11 @@ The connector processes data in the following way:
 
 The connector uses incremental sync based on table-specific incremental columns to avoid duplicate data and ensure efficient synchronization.
 
+The connector includes several configurable performance parameters:
+- `batch_process_size` – Number of records processed per upsert (default: 1000)
+- `batch_query_size` – Number of records retrieved per query (default: 10000)
+- `MAX_WORKERS` – Maximum number of concurrent threads (default: 10)
+
 ## Error handling
 
 The connector implements error handling for:
@@ -119,32 +124,7 @@ Incremental column: `DATE_MODIFIED`
 
 ## Additional files
 
-The connector uses a separate **`schema.py`** file to define tables and their configuration:
-
-```python
-table_list = [
-    {
-        "table_name": "table_1",
-        "incremental_column": "ID",
-        "primary_key": ["ID"]
-    },
-    {
-        "table_name": "table_2",
-        "incremental_column": "DATE_MODIFIED",
-        "primary_key": ["ID"]
-    },
-    {
-        "table_name": "table_3",
-        "incremental_column": "DATE_MODIFIED",
-        "primary_key": ["ID"]
-    }
-]
-```
-
-The connector includes several configurable performance parameters:
-- `batch_process_size`: Number of records processed per upsert (default: 1000)
-- `batch_query_size`: Number of records retrieved per query (default: 10000)
-- `MAX_WORKERS`: Maximum number of concurrent threads (default: 10)
+- [`schema.py`](schema.py) – Defines the list of Firebird tables to sync, with each entry specifying the table name, primary key columns, and incremental sync column.
 
 ## Additional considerations
 
