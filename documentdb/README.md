@@ -18,6 +18,21 @@ The connector is designed to handle large datasets efficiently through streaming
   - macOS: 13 (Ventura) or later (Apple Silicon [arm64] or Intel [x86_64])
   - Linux: Distributions such as Ubuntu 20.04 or later, Debian 10 or later, or Amazon Linux 2 or later (arm64 or x86_64)
 
+## Prerequisites
+
+This connector requires that the following prerequisites exist in your DocumentDB instance:
+
+- A database named as specified in the `configuration.json` file
+- A `users` collection with documents containing `_id` (ObjectId), `name` (string), `email` (string), `status` (string), `created_at` (datetime), `updated_at` (datetime), and `metadata` (object) fields
+- An `orders` collection with documents containing `_id` (ObjectId), `user_id` (string), `order_number` (string), `total_amount` (number), `status` (string), `created_at` (datetime), `updated_at` (datetime), and `items` (array) fields
+
+Example document structures:
+
+```json
+{ "_id": "ObjectId(...)", "name": "John Doe", "email": "john@example.com", "status": "active", "created_at": "ISODate(...)", "updated_at": "ISODate(...)", "metadata": { "source": "web" } }
+{ "_id": "ObjectId(...)", "user_id": "user123", "order_number": "ORD-001", "total_amount": 99.99, "status": "completed", "created_at": "ISODate(...)", "updated_at": "ISODate(...)", "items": [{ "product": "Widget", "quantity": 2 }] }
+```
+
 ## Getting started
 
 Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/connector-sdk/setup-guide) to get started.
@@ -56,11 +71,11 @@ The connector requires the following configuration parameters:
 }
 ```
 
-- hostname: The DocumentDB cluster endpoint hostname
-- username: Username for authentication
-- password: Password for authentication
-- database: The DocumentDB database name to connect to
-- port: The port number for the DocumentDB cluster (default: 27017)
+- `hostname` – The DocumentDB cluster endpoint hostname
+- `username` – Username for authentication
+- `password` – Password for authentication
+- `database` – The DocumentDB database name to connect to
+- `port` – The port number for the DocumentDB cluster (default: 27017)
 
 > Note: When submitting connector code as a [Community Connector](https://github.com/fivetran/fivetran_csdk_connectors/tree/main) in the open-source [Connector SDK repository](https://github.com/fivetran/fivetran_csdk_connectors/tree/main), ensure the `configuration.json` file has placeholder values. When adding the connector to your production repository, ensure that the `configuration.json` file is not checked into version control to protect sensitive information.
 
@@ -79,10 +94,10 @@ python-dateutil
 
 The connector uses SSL authentication with DocumentDB. Provide the following credentials in the configuration:
 
-- username: A valid DocumentDB user with read permissions on the specified database
-- password: The corresponding password for the user
+- `username` – A valid DocumentDB user with read permissions on the specified database
+- `password` – The corresponding password for the user
 
-The connector automatically configures SSL settings required for DocumentDB connections.
+The connector automatically configures SSL settings required for DocumentDB connections. The connection string includes `retryWrites=false`, which is required by DocumentDB.
 
 ## Pagination
 
@@ -101,14 +116,6 @@ The connector processes data with the following approach:
 - Handles timezone-aware datetime objects consistently across queries and comparisons
 - Uses MongoDB query syntax with `$gt` operator for efficient incremental querying
 - Maintains state between runs by tracking the latest timestamp processed
-- Delivers data with the following schema mapping:
-  - _id (ObjectId → STRING)
-  - name (string → STRING)
-  - email (string → STRING)
-  - status (string → STRING)
-  - created_at (datetime → UTC_DATETIME)
-  - updated_at (datetime → UTC_DATETIME)
-  - metadata (object → JSON)
 
 ## Error handling
 
@@ -127,49 +134,20 @@ This connector creates the following tables in your destination:
 
 ### USERS
 
-- Primary key: `_id`
-- Columns:
-  - `_id` (STRING): Document unique identifier
-  - `created_at` (UTC_DATETIME): Document creation timestamp
-  - `updated_at` (UTC_DATETIME): Document last update timestamp
-  - `metadata` (JSON): Additional user metadata as JSON object
+- `_id` (STRING, primary key) – Document unique identifier
+- `created_at` (UTC_DATETIME) – Document creation timestamp
+- `updated_at` (UTC_DATETIME) – Document last update timestamp
+- `metadata` (JSON) – Additional user metadata as JSON object
 
 ### ORDERS
 
-- Primary key: `_id`
-- Columns:
-  - `_id` (STRING): Document unique identifier
-  - `created_at` (UTC_DATETIME): Order creation timestamp
-  - `updated_at` (UTC_DATETIME): Order last update timestamp
-  - `items` (JSON): Order items as JSON array
-
-## Prerequisites
-
-This connector requires that the following prerequisites exist in your DocumentDB instance:
-
-- A database named as specified in your configuration
-- Collections with documents containing the following fields:
-   - `_id` (ObjectId): Primary key
-   - `updated_at` (datetime): Document update timestamp for incremental sync
-   - Other fields as defined in your schema
-
-Example document structure:
-```json
-{
-  "_id": ObjectId("..."),
-  "created_at": ISODate("2023-01-01T00:00:00Z"),
-  "updated_at": ISODate("2023-01-01T00:00:00Z"),
-  "metadata": {"source": "web"}
-}
-```
+- `_id` (STRING, primary key) – Document unique identifier
+- `created_at` (UTC_DATETIME) – Order creation timestamp
+- `updated_at` (UTC_DATETIME) – Order last update timestamp
+- `items` (JSON) – Order items as JSON array
 
 ## Additional considerations
 
 The examples provided are intended to help you effectively use Fivetran's Connector SDK. While we've tested the code, Fivetran cannot be held responsible for any unexpected or negative consequences that may arise from using these examples. For inquiries, please reach out to our Support team.
 
-### DocumentDB-specific notes
-
-- DocumentDB is MongoDB-compatible, so this connector uses the PyMongo driver
-- SSL is required for DocumentDB connections and is automatically configured
-- The connector uses `retryWrites=false` in the connection string as required by DocumentDB
-- DocumentDB has some limitations compared to MongoDB, but this connector works within those constraints
+DocumentDB is MongoDB-compatible, so this connector uses the PyMongo driver. DocumentDB has some limitations compared to MongoDB, but this connector works within those constraints.
