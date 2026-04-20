@@ -114,7 +114,7 @@ The connector implements error handling at multiple levels:
 
 - Validates that all required configuration parameters are present
 - Topic creation – Handles `AlreadyExists` exception gracefully when creating test topics
-- Wraps message processing in try-except blocks to catch and report errors during:
+- Wraps each message batch in a try-except block to handle errors during payload parsing, record upsert, and message acknowledgment.
 - All exceptions are re-raised as `RuntimeError` with contextual error messages for debugging.
 
 ## Tables created
