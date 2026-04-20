@@ -1,0 +1,23 @@
+gcp_pub_sub/README.md
+  c65341604af64277 117
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.1",
+  "base_commit_sha": "1d94a1246db6fbfaa8616cf5e77e28b63a2b14cc",
+  "prompts": {
+    "c65341604af64277": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "ccf25ebc-ffc7-444c-bbd5-a23c780547b9",
+        "model": "claude-sonnet-4-6"
+      },
+      "human_author": "fivetran-JenasVimal <jenas.vimal@fivetran.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    }
+  }
+}
