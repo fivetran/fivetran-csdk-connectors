@@ -85,6 +85,11 @@ The connector processes data in the following way:
 
 The connector uses incremental sync based on table-specific incremental columns to avoid duplicate data and ensure efficient synchronization.
 
+The connector includes several configurable performance parameters:
+- `batch_process_size` – Number of records processed per upsert (default: 1000)
+- `batch_query_size` – Number of records retrieved per query (default: 10000)
+- `MAX_WORKERS` – Maximum number of concurrent threads (default: 10)
+
 ## Error handling
 
 The connector implements error handling for:
