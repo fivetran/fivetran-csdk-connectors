@@ -59,6 +59,23 @@ This connector does not require any additional packages beyond those provided by
 
 > Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
+## Authentication
+
+The connector authenticates with the GNews API using an API key passed as a query parameter in each request. To obtain an API key:
+
+1. Register for an account at [gnews.io](https://gnews.io).
+2. Verify your email address to activate your account and unlock API access.
+3. Log in and navigate to your dashboard.
+4. Copy your API key and set it as `api_key` in `configuration.json`.
+
+## Pagination
+
+The connector iterates through pages of GNews search results using the `page` query parameter in `fetch_all_news()`, starting at page 1 and incrementing on each request. Paging stops when one of the following conditions is met:
+
+- A page returns zero articles.
+- The cumulative upsert count equals `totalArticles` from the API response.
+- The optional `max_pages` cap is reached.
+
 ## Data handling
 
 - Data normalization: `normalize_articles` flattens each `articles[*]` object and maps:
