@@ -71,10 +71,13 @@ boto3==1.37.4
 
 ## Authentication
 
-This connector authenticates by:
-- Using `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to create an STS client.
-- Calling `sts.assume_role()` with the `ROLE_ARN`.
-- Using the assumed role's credentials to access DynamoDB.
+This connector authenticates using AWS IAM role assumption via STS. To set up the required credentials:
+
+1. In the AWS Console, create an IAM user with programmatic access and save the generated `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+2. Create an IAM role (or choose an existing one) and attach the `AmazonDynamoDBFullAccess` policy to it.
+3. Edit the role's trust policy to allow the IAM user to assume it.
+4. Copy the role ARN (format: `arn:aws:iam::<account-id>:role/<role-name>`).
+5. Set `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `ROLE_ARN`, and `REGION` in `configuration.json`.
 
 ## Pagination
 
