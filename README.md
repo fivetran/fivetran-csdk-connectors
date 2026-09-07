@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  Fivetran Connector SDK allows Real-time, efficient data replication to your destination of choice.
+  Fivetran Connector SDK enables real-time, efficient data replication to your destination of choice.
 </p>
 
 <p align="center">
@@ -25,8 +25,8 @@ For SDK installation and setup, visit the main [Fivetran Connector SDK repositor
 
 ### Databases
 
-- **Apache Druid (PyDruid)** ([apache_druid/using_pydruid](https://github.com/fivetran/community_connectors/tree/main/apache_druid/using_pydruid)) - This example demonstrates syncing from Apache Druid using the PyDruid library for native query capabilities, retry logic with exponential backoff, and optimized data retrieval for enhanced performance.
-- **Apache Druid (SQL API)** ([apache_druid/using_sql](https://github.com/fivetran/community_connectors/tree/main/apache_druid/using_sql)) - This example shows how to sync data from Apache Druid datasources using Druid's SQL API with time-based pagination and incremental sync to efficiently replicate event and analytics data.
+- **Apache Druid (PyDruid)** ([apache_druid/using_pydruid](https://github.com/fivetran/community_connectors/tree/main/apache_druid/using_pydruid)) - Sync data from Apache Druid using the PyDruid library with native query capabilities, retry logic, and optimized data retrieval.
+- **Apache Druid (SQL API)** ([apache_druid/using_sql](https://github.com/fivetran/community_connectors/tree/main/apache_druid/using_sql)) - Sync data from Apache Druid using Druid's SQL API with time-based pagination and incremental sync.
 - **Apache HBase** ([apache_hbase](https://github.com/fivetran/community_connectors/tree/main/apache_hbase)) - Connect and sync data from Apache HBase using happybase and thrift libraries
 - **Apache Hive (PyHive)** ([apache_hive/using_pyhive](https://github.com/fivetran/community_connectors/tree/main/apache_hive/using_pyhive)) - Sync data from Apache Hive using PyHive
 - **Apache Hive (SQLAlchemy)** ([apache_hive/using_sqlalchemy](https://github.com/fivetran/community_connectors/tree/main/apache_hive/using_sqlalchemy)) - Sync data from Apache Hive using SQLAlchemy with PyHive
@@ -40,16 +40,16 @@ For SDK installation and setup, visit the main [Fivetran Connector SDK repositor
 - **AWS DocumentDB** ([documentdb](https://github.com/fivetran/community_connectors/tree/main/documentdb)) - Connect to AWS DocumentDB and sync collections (Hybrid Deployment compatible)
 - **DolphinDB** ([dolphin_db](https://github.com/fivetran/community_connectors/tree/main/dolphin_db)) - Sync data from DolphinDB database
 - **DragonflyDB** ([dragonfly_db](https://github.com/fivetran/community_connectors/tree/main/dragonfly_db)) - Sync high-performance in-memory data from DragonflyDB
-- **EHI (Simple)** ([ehi/simple_ehi](https://github.com/fivetran/community_connectors/tree/main/ehi/simple_ehi)) - This example shows how to sync EHI tables such as Caboodle using Connector SDK. It connects to Microsoft SQL server to sync the data. You need to provide your server credentials for this example to work.
-- **EHI (High Volume)** ([ehi/high_volume_ehi](https://github.com/fivetran/community_connectors/tree/main/ehi/high_volume_ehi)) - High-volume Microsoft SQL Server connector for syncing high volume EHI tables using keyset and offset pagination with parallel processing
+- **EHI (Simple)** ([ehi/simple_ehi](https://github.com/fivetran/community_connectors/tree/main/ehi/simple_ehi)) - Sync EHI tables such as Caboodle from Microsoft SQL Server.
+- **EHI (High Volume)** ([ehi/high_volume_ehi](https://github.com/fivetran/community_connectors/tree/main/ehi/high_volume_ehi)) - Sync high-volume EHI tables from Microsoft SQL Server using keyset and offset pagination with parallel processing
 - **Firebird** ([firebird_db](https://github.com/fivetran/community_connectors/tree/main/firebird_db)) - Sync data from Firebird DB
 - **Greenplum** ([greenplum_db](https://github.com/fivetran/community_connectors/tree/main/greenplum_db)) - Sync data from Greenplum database
-- **IBM Db2** ([simple_ibm_db2](https://github.com/fivetran/community_connectors/tree/main/ibm_db2/simple_ibm_db2)) - This example shows how to connect and sync data from IBM Db2 using Connector SDK. It uses the `ibm_db` library to connect to the database and fetch data.
-- **IBM Db2 (Log-Based Replication)** ([ibm_db2_log_based_replication](https://github.com/fivetran/community_connectors/tree/main/ibm_db2/ibm_db2_log_based_replication)) - This example demonstrates log-based Change Data Capture (CDC) for IBM Db2 using the ASN SQL Replication framework. The `asncap` daemon reads the Db2 transaction log and writes every INSERT, UPDATE, and DELETE to a Change Data table; the connector reads exclusively from that table after the initial load, making this genuine log-based replication without polling the source.
-- **IBM Db2 for i** ([ibm_db2i](https://github.com/fivetran/community_connectors/tree/main/ibm_db2/ibm_db2i)) - This example shows how to connect and sync data from IBM Db2 for i (IBM i / AS400) using Connector SDK. It uses the `pyodbc` library with the IBM i Access ODBC Driver to connect to the database and fetch data.
-- **IBM Informix (ibm_db)** ([ibm_informix_using_ibm_db](https://github.com/fivetran/community_connectors/tree/main/ibm_informix/ibm_informix_using_ibm_db)) - This example shows how to connect and sync data from IBM Informix using Connector SDK. This example uses the `ibm_db` library to connect to the Informix database and fetch data.
-- **IBM Informix (JayDeBeApi)** ([ibm_informix_using_jaydebeapi](https://github.com/fivetran/community_connectors/tree/main/ibm_informix/ibm_informix_using_jaydebeapi)) - This example shows how to connect and sync data from IBM Informix using Connector SDK. This example uses the `jaydebeapi` library with external JDBC Informix driver, using `installation.sh` file in the `drivers` folder, to connect to the Informix database and fetch data.
-- **JanusGraph** ([janus_graph](https://github.com/fivetran/community_connectors/tree/main/janus_graph)) - This example shows how to sync data from the Janus Graph database using the Connector SDK. You need to provide your Janus Graph credentials for this example to work.
+- **IBM Db2** ([simple_ibm_db2](https://github.com/fivetran/community_connectors/tree/main/ibm_db2/simple_ibm_db2)) - Sync data from IBM Db2 using the `ibm_db` library.
+- **IBM Db2 (Log-Based Replication)** ([ibm_db2_log_based_replication](https://github.com/fivetran/community_connectors/tree/main/ibm_db2/ibm_db2_log_based_replication)) - Sync IBM Db2 data using log-based CDC via the ASN SQL Replication framework, reading from Change Data tables without polling the source.
+- **IBM Db2 for i** ([ibm_db2i](https://github.com/fivetran/community_connectors/tree/main/ibm_db2/ibm_db2i)) - Sync data from IBM Db2 for i (IBM i / AS400) using `pyodbc` with the IBM i Access ODBC Driver.
+- **IBM Informix (ibm_db)** ([ibm_informix_using_ibm_db](https://github.com/fivetran/community_connectors/tree/main/ibm_informix/ibm_informix_using_ibm_db)) - Sync data from IBM Informix using the `ibm_db` library.
+- **IBM Informix (JayDeBeApi)** ([ibm_informix_using_jaydebeapi](https://github.com/fivetran/community_connectors/tree/main/ibm_informix/ibm_informix_using_jaydebeapi)) - Sync data from IBM Informix using `jaydebeapi` with an external JDBC driver.
+- **JanusGraph** ([janus_graph](https://github.com/fivetran/community_connectors/tree/main/janus_graph)) - Sync data from JanusGraph.
 - **InfluxDB** ([influx_db](https://github.com/fivetran/community_connectors/tree/main/influx_db)) - Sync time-series data from InfluxDB
 - **Neo4j** ([neo4j](https://github.com/fivetran/community_connectors/tree/main/neo4j)) - Extract data from Neo4j graph databases
 - **QuestDB** ([quest_db](https://github.com/fivetran/community_connectors/tree/main/quest_db)) - Sync high-performance time series data from QuestDB
@@ -58,10 +58,10 @@ For SDK installation and setup, visit the main [Fivetran Connector SDK repositor
 - **RethinkDB** ([rethink_db](https://github.com/fivetran/community_connectors/tree/main/rethink_db)) - Sync data from RethinkDB real-time database
 - **SAP HANA** ([sap_hana_sql](https://github.com/fivetran/community_connectors/tree/main/sap_hana_sql)) - Connect to SAP HANA SQL Server using hdbcli
 - **SQL Server** ([sql_server](https://github.com/fivetran/community_connectors/tree/main/sql_server)) - Connect to SQL Server using pyodbc
-- **Sybase IQ** ([sybase_iq](https://github.com/fivetran/community_connectors/tree/main/sybase_iq)) - This example demonstrates how to connect to Sybase IQ database using the `FreeTDS` driver and `PyODBC` by writing a `installation.sh` file in the `drivers` folder.
-- **Sybase ASE** ([sybase_ase](https://github.com/fivetran/community_connectors/tree/main/sybase_ase)) - This example demonstrates how to connect to Sybase ASE database using the `FreeTDS` driver and `PyODBC` by writing a `installation.sh` file in the `drivers` folder.
+- **Sybase IQ** ([sybase_iq](https://github.com/fivetran/community_connectors/tree/main/sybase_iq)) - Sync data from Sybase IQ using the `FreeTDS` driver and `PyODBC`.
+- **Sybase ASE** ([sybase_ase](https://github.com/fivetran/community_connectors/tree/main/sybase_ase)) - Sync data from Sybase ASE using the `FreeTDS` driver and `PyODBC`.
 - **Teradata Vantage** ([teradata](https://github.com/fivetran/community_connectors/tree/main/teradata)) - Sync data from Teradata Vantage database
-- **TiDB** ([tidb](https://github.com/fivetran/community_connectors/tree/main/tidb)) - Incremental replication from TiDB databases
+- **TiDB** ([tidb](https://github.com/fivetran/community_connectors/tree/main/tidb)) - Sync data incrementally from TiDB databases
 - **TimescaleDB** ([timescale_db](https://github.com/fivetran/community_connectors/tree/main/timescale_db)) - Sync time-series and vector data from TimescaleDB
 - **YugabyteDB** ([yugabyte_db](https://github.com/fivetran/community_connectors/tree/main/yugabyte_db)) - Sync data from YugabyteDB distributed SQL database
 
@@ -74,7 +74,7 @@ For SDK installation and setup, visit the main [Fivetran Connector SDK repositor
 - **Redshift** ([redshift/simple_redshift_connector](https://github.com/fivetran/community_connectors/tree/main/redshift/simple_redshift_connector)) - Sync records from Redshift
 - **Redshift (Large Data Volume)** ([redshift/large_data_volume](https://github.com/fivetran/community_connectors/tree/main/redshift/large_data_volume)) - Sync large data volumes from Redshift
 - **Redshift (Using UNLOAD)** ([redshift/using_unload](https://github.com/fivetran/community_connectors/tree/main/redshift/using_unload)) - Sync data from Redshift using UNLOAD to S3
-- **Delta Sharing** ([delta_sharing](https://github.com/fivetran/community_connectors/tree/main/delta_sharing)) - Connect and sync data from Databricks Delta Sharing (now OpenSharing): An Open Protocol for Secure Data Sharing       
+- **Delta Sharing** ([delta_sharing](https://github.com/fivetran/community_connectors/tree/main/delta_sharing)) - Connect and sync data from Databricks Delta Sharing (now OpenSharing): An Open Protocol for Secure Data Sharing     
 
 ### Message Queues & Streaming
 
@@ -89,7 +89,7 @@ For SDK installation and setup, visit the main [Fivetran Connector SDK repositor
 - **Databricks CPSC Product Safety Intelligence** ([databricks/databricks-fm-cpsc-product-safety-intelligence](https://github.com/fivetran/community_connectors/tree/main/databricks/databricks-fm-cpsc-product-safety-intelligence)) - Sync CPSC product recall data and enrich incidents with Databricks `ai_query()` multi-agent product safety analysis.
 - **Databricks FDA Drug Label Intelligence** ([databricks/databricks-fm-fda-drug-label-intelligence](https://github.com/fivetran/community_connectors/tree/main/databricks/databricks-fm-fda-drug-label-intelligence)) - Sync OpenFDA drug label data and enrich package inserts with Databricks `ai_query()` analysis and optional Genie Space creation.
 - **Databricks FDA FAERS Pharmacovigilance Intelligence** ([databricks/databricks-fm-fda-faers-pv-intelligence](https://github.com/fivetran/community_connectors/tree/main/databricks/databricks-fm-fda-faers-pv-intelligence)) - Sync FDA FAERS adverse event reports and enrich serious events with Databricks `ai_query()` pharmacovigilance debate analysis.
-- **Databricks FHIR Healthcare Intelligence** ([databricks/databricks-fm-fhir-healthcare-intelligence](https://github.com/fivetran/community_connectors/tree/main/databricks/databricks-fm-fhir-healthcare-intelligence)) - Sync clinical data from a FHIR R4 server and enriches it with AI-powered hybrid analysis using Databricks `ai_query()`.
+- **Databricks FHIR Healthcare Intelligence** ([databricks/databricks-fm-fhir-healthcare-intelligence](https://github.com/fivetran/community_connectors/tree/main/databricks/databricks-fm-fhir-healthcare-intelligence)) - Sync clinical data from a FHIR R4 server and enrich it with AI-powered hybrid analysis using Databricks `ai_query()`.
 - **Databricks NOAA Weather Risk Intelligence** ([databricks/databricks-fm-noaa-weather-risk-intelligence](https://github.com/fivetran/community_connectors/tree/main/databricks/databricks-fm-noaa-weather-risk-intelligence)) - Sync NOAA severe weather alerts and use Databricks `ai_query()` for agent-driven discovery and emergency risk analysis.
 - **Databricks SEC EDGAR Risk Intelligence** ([databricks/databricks-fm-sec-edgar-risk-intelligence](https://github.com/fivetran/community_connectors/tree/main/databricks/databricks-fm-sec-edgar-risk-intelligence)) - Sync SEC EDGAR filings and XBRL financial facts, then enrich them with Databricks `ai_query()` credit risk intelligence.
 - **Databricks TVMaze Programming Intelligence** ([databricks/databricks-fm-tvmaze-programming-intelligence](https://github.com/fivetran/community_connectors/tree/main/databricks/databricks-fm-tvmaze-programming-intelligence)) - Sync TVMaze show metadata and enrich each show with Databricks `ai_query()` programming renewal debate analysis.
@@ -103,11 +103,11 @@ For SDK installation and setup, visit the main [Fivetran Connector SDK repositor
 
 - **Amazon Video Central** ([amazon_video_central](https://github.com/fivetran/community_connectors/tree/main/amazon_video_central)) - Sync report data from Amazon Video Central API
 - **Awardco** ([awardco](https://github.com/fivetran/community_connectors/tree/main/awardco)) - Sync data from Awardco rewards platform
-- **Beehiiv** ([beehiiv](https://github.com/fivetran/community_connectors/tree/main/beehiiv)) - Sync newsletter data from the beehiiv API including publications, subscriptions, posts, email blasts, automations, and engagement metrics
+- **Beehiiv** ([beehiiv](https://github.com/fivetran/community_connectors/tree/main/beehiiv)) - Sync newsletter data from the beehiiv API, including publications, subscriptions, posts, email blasts, automations, and engagement metrics
 - **Better Stack** ([betterstack](https://github.com/fivetran/community_connectors/tree/main/betterstack)) - Sync uptime monitoring data from Better Stack
 - **Bright Data Web Scraper** ([bright_data_scrape](https://github.com/fivetran/community_connectors/tree/main/bright_data_scrape)) - Sync scraped web page content and extracted fields from the Bright Data Web Scraper API
 - **Bright Data Web Unlocker** ([bright_data_unlocker](https://github.com/fivetran/community_connectors/tree/main/bright_data_unlocker)) - Sync unlocked web page content for one or more URLs from the Bright Data Web Unlocker API
-- **CallMiner** ([callminer](https://github.com/fivetran/fivetran_csdk_connectors/tree/main/callminer)) - Sync CallMiner Bulk Export data using OAuth2 authentication, export job polling, archive extraction, and per-data-type incremental state tracking
+- **CallMiner** ([callminer](https://github.com/fivetran/community_connectors/tree/main/callminer)) - Sync CallMiner Bulk Export data using OAuth2 authentication, export job polling, archive extraction, and per-data-type incremental state tracking
 - **Checkly** ([checkly](https://github.com/fivetran/community_connectors/tree/main/checkly)) - Sync monitoring check data and analytics from Checkly
 - **Clerk** ([clerk](https://github.com/fivetran/community_connectors/tree/main/clerk)) - Sync user data from Clerk authentication
 - **Common Paper** ([commonpaper](https://github.com/fivetran/community_connectors/tree/main/commonpaper)) - Sync agreement data from Common Paper
@@ -149,21 +149,21 @@ For SDK installation and setup, visit the main [Fivetran Connector SDK repositor
 - **OData API** ([odata_api](https://github.com/fivetran/community_connectors/tree/main/odata_api)) - Sync data from OData APIs (versions 2 and 4)
 - **Oktopost** ([oktopost](https://github.com/fivetran/community_connectors/tree/main/oktopost)) - Sync social media exports from Oktopost BI API
 - **Open-Meteo Marine Weather** ([open_meteo_marine_weather](https://github.com/fivetran/community_connectors/tree/main/open_meteo_marine_weather)) - Sync hourly and daily marine weather data (wave height, direction, period, swell, wind waves) from the Open-Meteo Marine Weather API
-- **Oura Ring** ([oura_ring](https://github.com/fivetran/community_connectors/tree/main/oura_ring)) - This example shows how to sync health and wellness data from the Oura Ring API v2 using Connector SDK. It syncs daily activity, sleep, readiness, stress, and heart rate data with incremental syncing, cursor-based pagination, automatic flattening of nested contributor objects, and date-range chunking for high-volume heart rate data. You need to provide your Oura Personal Access Token for this example to work.
+- **Oura Ring** ([oura_ring](https://github.com/fivetran/community_connectors/tree/main/oura_ring)) - Sync daily activity, sleep, readiness, stress, and heart rate data from the Oura Ring API v2.
 - **OWASP API Vulnerabilities** ([owasp_api_vulns](https://github.com/fivetran/community_connectors/tree/main/owasp_api_vulns)) - Sync OWASP API vulnerability data from NVD 2.0
 - **Partech (Punchh)** ([partech](https://github.com/fivetran/community_connectors/tree/main/partech)) - Sync POS data from Partech (formerly Punchh)
 - **Pindrop** ([pindrop](https://github.com/fivetran/community_connectors/tree/main/pindrop)) - Sync nightly report data from Pindrop
 - **Prefect Cloud** ([prefect](https://github.com/fivetran/community_connectors/tree/main/prefect)) - Sync workflow orchestration data from Prefect Cloud
 - **Prometheus** ([prometheus](https://github.com/fivetran/community_connectors/tree/main/prometheus)) - Sync metrics and time series from Prometheus
 - **Resend** ([resend](https://github.com/fivetran/community_connectors/tree/main/resend)) - Sync email data from Resend API
-- **Rillet** ([rillet](https://github.com/fivetran/community_connectors/tree/main/rillet)) - This example shows how to use the Connector SDK to integrate with Rillet's API and sync accounting data. You need to provide the API key for this example to work.
+- **Rillet** ([rillet](https://github.com/fivetran/community_connectors/tree/main/rillet)) - Sync accounting data from Rillet.
 - **S3 CSV File Reader with Data Validation** ([s3_csv_validation](https://github.com/fivetran/community_connectors/tree/main/s3_csv_validation)) - Read and validate CSV files from Amazon S3
 - **SAM.gov** ([sam_gov](https://github.com/fivetran/community_connectors/tree/main/sam_gov)) - Sync government contracting opportunities from SAM.gov
 - **SAP Ariba** ([sap_ariba](https://github.com/fivetran/community_connectors/tree/main/sap_ariba)) - Sync procurement data from SAP Ariba
 - **Sendcloud** ([sendcloud](https://github.com/fivetran/community_connectors/tree/main/sendcloud)) - Sync shipment data from Sendcloud API
 - **Sensor Tower** ([sensor_tower](https://github.com/fivetran/community_connectors/tree/main/sensor_tower)) - Sync mobile app market intelligence from Sensor Tower
 - **SenSource** ([sensource](https://github.com/fivetran/community_connectors/tree/main/sensource)) - Sync traffic and occupancy metrics from SenSource
-- **SharePoint Multi-Site** ([sharepoint_multi_site_connector](https://github.com/fivetran/community_connectors/tree/main/sharepoint_multi_site_connector)) - Syncs CSV and Excel file data from multiple SharePoint Online sites using the Microsoft Graph API. Supports multi-sheet Excel workbooks, recursive folder traversal, incremental sync, and deletion handling.
+- **SharePoint Multi-Site** ([sharepoint_multi_site_connector](https://github.com/fivetran/community_connectors/tree/main/sharepoint_multi_site_connector)) - Sync CSV and Excel file data from multiple SharePoint Online sites using the Microsoft Graph API, with support for multi-sheet workbooks, recursive folder traversal, and deletion handling.
 - **BAI2 SFTP** ([sftp_connector/bai2_sftp_connector](https://github.com/fivetran/community_connectors/tree/main/sftp_connector/bai2_sftp_connector)) - Fetch BAI2-format cash management files from an SFTP server and load all transactions into a single destination table with incremental sync and structured ACH field parsing
 - **Fixed-Width SFTP** ([sftp_connector/fixed_width_sftp_connector](https://github.com/fivetran/community_connectors/tree/main/sftp_connector/fixed_width_sftp_connector)) - Read 12 fixed-width files from 3 SFTP subdirectories (ELAN, CUP, LPL/DFM) into 12 destination tables with soft-delete purge logic and implied-decimal parsing
 - **Similarweb** ([similarweb](https://github.com/fivetran/community_connectors/tree/main/similarweb)) - Sync website performance metrics from SimilarWeb
@@ -173,14 +173,14 @@ For SDK installation and setup, visit the main [Fivetran Connector SDK repositor
 - **SuiteDash** ([suitedash](https://github.com/fivetran/community_connectors/tree/main/suitedash)) - Sync CRM data from SuiteDash API
 - **Supabase** ([supabase](https://github.com/fivetran/community_connectors/tree/main/supabase)) - Sync employee data from Supabase database
 - **Talon.One** ([talon_one](https://github.com/fivetran/community_connectors/tree/main/talon_one)) - Sync events data from Talon.One
-- **Temporal Cloud** ([temporal_cloud](https://github.com/fivetran/community_connectors/tree/main/temporal_cloud)) - This example shows how to sync workflow execution and schedule data from Temporal Cloud using Connector SDK. It retrieves workflow metadata, as well as schedule configurations. The connector uses async operations for efficient data retrieval and implements streaming to handle large datasets. You need to provide your Temporal Cloud host, namespace, and API key for this example to work.
+- **Temporal Cloud** ([temporal_cloud](https://github.com/fivetran/community_connectors/tree/main/temporal_cloud)) - Sync workflow execution and schedule data from Temporal Cloud.
 - **Toast** ([toast](https://github.com/fivetran/community_connectors/tree/main/toast)) - Sync POS data from Toast
 - **Tulip Interfaces** ([tulip_interfaces](https://github.com/fivetran/community_connectors/tree/main/tulip_interfaces)) - Sync data from Tulip Tables
 - **Veeva Vault (Basic Authentication)** ([veeva_vault/basic_auth](https://github.com/fivetran/community_connectors/tree/main/veeva_vault/basic_auth)) - Authenticate to Veeva Vault with basic auth
 - **Veeva Vault (Session Authentication)** ([veeva_vault/session_id_auth](https://github.com/fivetran/community_connectors/tree/main/veeva_vault/session_id_auth)) - Authenticate to Veeva Vault with session ID
 - **Vercel** ([vercel](https://github.com/fivetran/community_connectors/tree/main/vercel)) - Sync deployment data from Vercel REST API
 - **Oracle WMS** ([wms_oracle](https://github.com/fivetran/community_connectors/tree/main/wms_oracle)) - Sync warehouse management data from Oracle WMS REST API with incremental sync, historical backfill, and pre-cursor drift detection across 26 entities.
-- **Weights & Biases** ([weights_and_biases](https://github.com/fivetran/community_connectors/tree/main/weights_and_biases)) - This example shows how to sync machine learning experiment tracking data from Weights & Biases (W&B), including projects, runs (experiments), and artifacts (models and datasets), using the Fivetran Connector SDK The connector uses the W&B Python SDK to retrieve data and implements robust error handling. You need to provide your W&B API key and entity name for this example to work.
+- **Weights & Biases** ([weights_and_biases](https://github.com/fivetran/community_connectors/tree/main/weights_and_biases)) - Sync machine learning experiment tracking data from Weights & Biases, including projects, runs, and artifacts.
 - **Zigpoll** ([zigpoll](https://github.com/fivetran/community_connectors/tree/main/zigpoll)) - Sync polling data from Zigpoll
 
 </details>
@@ -205,7 +205,7 @@ Please read our [CONTRIBUTING.md](https://github.com/fivetran/community_connecto
 - Testing requirements
 - Review process
 
-## Issue
+## Issues
 
 Found an issue? Submit an [issue](https://github.com/fivetran/community_connectors/issues) and get connected to a Fivetran developer.
 
