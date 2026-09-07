@@ -65,7 +65,7 @@ Configuration parameters:
 
 This connector does not require any additional Python packages beyond what is pre-installed in the Fivetran environment.
 
-Note: The `fivetran_connector_sdk:latest` and `requests:latest` packages are pre-installed in the Fivetran environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
+> Note: [Some packages](https://fivetran.com/docs/connector-sdk/technical-reference#preinstalledpackages) are pre-installed in the Connector SDK runtime environment. To avoid dependency conflicts, do not declare them in your `requirements.txt`.
 
 ## Authentication
 
@@ -73,7 +73,7 @@ The Bright Data API uses Bearer token authentication. To obtain your API token:
 
 1. Visit the [Bright Data website](https://brightdata.com).
 2. Create an account or log in to your existing account.
-3. Navigate to **Settings > Users** or visit https://brightdata.com/cp/setting/users.
+3. Navigate to **Settings > Users** or visit [https://brightdata.com/cp/setting/users](https://brightdata.com/cp/setting/users).
 4. Generate and make a note of your API token.
 5. Add the API token to your `configuration.json` file as the value for the `api_token` parameter.
 
