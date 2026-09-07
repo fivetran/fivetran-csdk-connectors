@@ -30,7 +30,7 @@ Refer to the [Connector SDK Setup Guide](https://fivetran.com/docs/connectors/co
 To initialize a new Connector SDK project using this connector as a starting point, run:
 
 ```bash
-fivetran init --template ibm/ibm_db2_log_based_replication
+fivetran init --template ibm_db2/ibm_db2_log_based_replication
 ```
 `fivetran init` initializes a new Connector SDK project by setting up the project structure, configuration files, and a connector you can run immediately with `fivetran debug`. For more information on `fivetran init`, refer to the [Connector SDK `init` documentation](https://fivetran.com/docs/connector-sdk/connector-development-and-configuration/connector-sdk-commands#fivetraninit).
 
